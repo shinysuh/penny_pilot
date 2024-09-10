@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: ENC(ZJ/RZuBeV91DzVNknIt5aDaBePZaO44QjTq0hXpeilZTgnmuTp4RrdJiMHYeyuwu+hU//265fnU=)
+    username: ENC(kcrg3u/T4snp/DDn7DaYNv2sOjFMzjzNjHOmADHQ+18=)
+    password: ENC(/T/Zccjng3gtvG791QIXaGKdPn8wNBrslGNUcVsHae4=)
+#  servlet:
+#    multipart:
+#      max-file-size: 100MB
+#      max-request-size: 100MB
+mybatis:
+  mapper-locations: classpath:sql/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    property:
+      prefix: ENC(
+      suffix: )
+#logging:
+#  config: classpath:log4j2.yml
+
