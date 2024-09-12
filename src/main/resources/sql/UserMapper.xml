@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jenna.pennypilot.domain.user.mapper.UserMapper">
+
+    <sql id="selectUserSql">
+        SELECT ID,
+               USERNAME,
+               EMAIL,
+               FIRST_NAME,
+               LAST_NAME,
+               CREATED_AT,
+               UPDATED_AT
+        FROM USERS
+    </sql>
+
+    <select id="selectUserById" resultType="UserDTO" parameterType="int">
+        <include refid="selectUserSql"/>
+        WHERE ID = #{id}
+    </select>
+
+    <select id="selectAllUsers" resultType="com.jenna.pennypilot.domain.use.dto.UserDTO"
+            parameterType="com.jenna.pennypilot.domain.use.dto.UserDTO">
+        <include refid="selectUserSql"/>
+        ORDER BY USERNAME ASC
+    </select>
+
+    <insert id="insertUser" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO USERS(USERNAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME)
+        VALUES (#{username}, #{email}, #{password}, #{firstName}, #{lastName})
+    </insert>
+
+    <update id="updateUser" parameterType="UserDTO">
+        UPDATE USERS
+        SET USERNAME   = #{username},
+            FIRST_NAME = #{firstName},
+            LAST_NAME  = #{lastName},
+            UPDATED_AT = SYSDATE
+        WHERE ID = #{id}
+    </update>
+
+    <update id="updatePassword" parameterType="UserDTO">
+        UPDATE USERS
+        SET PASSWORD   = #{password},
+            UPDATED_AT = SYSDATE
+        WHERE ID = #{id}
+          AND PASSWORD = #{oldPassword}
+    </update>
+
+    <delete id="deleteUserById" parameterType="int">
+        DELETE
+        FROM USERS
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="checkUsernameAlreadyInUse" resultType="int" parameterType="String">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE USERNAME = #{username}
+    </select>
+
+    <select id="checkEmailAlreadyInUse" resultType="int" parameterType="String">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE EMAIL = #{email}
+    </select>
+
+    <select id="selectUserWithPasswordByEmail" parameterType="String" resultType="UserDTO">
+        SELECT ID,
+               PASSWORD,
+               USERNAME,
+               EMAIL
+        FROM USERS
+        WHERE EMAIL = #{email}
+    </select>
+
+</mapper>
