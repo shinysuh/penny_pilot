@@ -18,6 +18,13 @@ jasypt:
     property:
       prefix: ENC(
       suffix: )
+server:
+  servlet:
+    session:
+      timeout: 18000
+      cookie:
+        max-age: 18000
+        name: PENNY_PILOT_JSESSIONID
 #logging:
 #  config: classpath:log4j2.yml
 
