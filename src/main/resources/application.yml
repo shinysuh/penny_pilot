@@ -19,6 +19,7 @@ jasypt:
       prefix: ENC(
       suffix: )
 server:
+#  forward-headers-strategy: framework
   servlet:
     session:
       timeout: 18000
@@ -27,4 +28,18 @@ server:
         name: PENNY_PILOT_JSESSIONID
 #logging:
 #  config: classpath:log4j2.yml
-
+springdoc:
+  api-docs:
+    enabled: true
+#    path: /v3/api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    enabled: true
+    path: /index.html
+    groups-order: ASC
+    doc-expansion: none
+    tags-sorter: alpha
+    operationsSorter: method
+    display-request-duration: true
+    disable-swagger-default-url: true

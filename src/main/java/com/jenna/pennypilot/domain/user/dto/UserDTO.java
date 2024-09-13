@@ -1,6 +1,7 @@
 package com.jenna.pennypilot.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "User DTO")
 public class UserDTO {
 
     private int id;
@@ -20,6 +22,7 @@ public class UserDTO {
 
     private String password;
 
+    @Schema(description = "old password")
     @JsonIgnore
     private String oldPassword;
 

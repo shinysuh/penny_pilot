@@ -1,32 +1,51 @@
 package com.jenna.pennypilot.core.swagger;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 public class SwaggerConfig {
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.jenna.pennypilot"))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo());
+    public OpenAPI getOpenApi() {
+//        return new OpenAPI()
+//        .components(new Components())
+//                .info(getInfo());
+        return new OpenAPI().info(getInfo());
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
+    private Info getInfo() {
+        return new Info()
+                .version("1.0.0")
                 .title("Swagger for Penny Pilot")
-                .description("Penny Pilot APIs")
+                .description("Penny Pilot APIs");
+    }
+
+    @Bean
+    public GroupedOpenApi api() {
+        String[] paths = {"/api/v1/**"};
+        String[] packageToScan = {"com.jenna.pennypilot"};
+        return GroupedOpenApi.builder().group("springdoc-openapi")
+                .pathsToMatch(paths)
+                .pathsToMatch(packageToScan)
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("public")
+                .pathsToMatch("/**")
+                .build();
+    }
+
+//    @Bean
+//    ForwardedHeaderFilter forwardedHeaderFilter() {
+//        return new ForwardedHeaderFilter();
+//    }
 
 }
