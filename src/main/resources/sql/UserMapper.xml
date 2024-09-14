@@ -15,23 +15,23 @@
         FROM USERS
     </sql>
 
-    <select id="selectUserById" resultType="UserDTO" parameterType="int">
+    <select id="selectUserById" resultType="com.jenna.pennypilot.domain.user.dto.UserDTO" parameterType="java.lang.Integer">
         <include refid="selectUserSql"/>
         WHERE ID = #{id}
     </select>
 
-    <select id="selectAllUsers" resultType="com.jenna.pennypilot.domain.use.dto.UserDTO"
-            parameterType="com.jenna.pennypilot.domain.use.dto.UserDTO">
+    <select id="selectAllUsers" resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
         <include refid="selectUserSql"/>
         ORDER BY USERNAME ASC
     </select>
 
-    <insert id="insertUser" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="insertUser" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
         INSERT INTO USERS(USERNAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME)
         VALUES (#{username}, #{email}, #{password}, #{firstName}, #{lastName})
     </insert>
 
-    <update id="updateUser" parameterType="UserDTO">
+    <update id="updateUser" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO">
         UPDATE USERS
         SET USERNAME   = #{username},
             FIRST_NAME = #{firstName},
@@ -40,7 +40,7 @@
         WHERE ID = #{id}
     </update>
 
-    <update id="updatePassword" parameterType="UserDTO">
+    <update id="updatePassword" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO">
         UPDATE USERS
         SET PASSWORD   = #{password},
             UPDATED_AT = SYSDATE
@@ -48,25 +48,26 @@
           AND PASSWORD = #{oldPassword}
     </update>
 
-    <delete id="deleteUserById" parameterType="int">
+    <delete id="deleteUserById" parameterType="java.lang.Integer">
         DELETE
         FROM USERS
         WHERE ID = #{id}
     </delete>
 
-    <select id="checkUsernameAlreadyInUse" resultType="int" parameterType="String">
+    <select id="checkUsernameAlreadyInUse" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT COUNT(*)
         FROM USERS
         WHERE USERNAME = #{username}
     </select>
 
-    <select id="checkEmailAlreadyInUse" resultType="int" parameterType="String">
+    <select id="checkEmailAlreadyInUse" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT COUNT(*)
         FROM USERS
         WHERE EMAIL = #{email}
     </select>
 
-    <select id="selectUserWithPasswordByEmail" parameterType="String" resultType="UserDTO">
+    <select id="selectUserWithPasswordByEmail" parameterType="java.lang.String"
+            resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
         SELECT ID,
                PASSWORD,
                USERNAME,
