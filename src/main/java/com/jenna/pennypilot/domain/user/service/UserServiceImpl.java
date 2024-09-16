@@ -29,9 +29,7 @@ public class UserServiceImpl implements UserService {
             throw new GlobalException(USER_EMAIL_NOT_EXIST);
         }
 
-        if (!getEncodedPassword(loginDTO.getPassword()).equals(loginUser.getPassword())) {
-            throw new GlobalException(USER_PW_NOT_MATCHED);
-        }
+        this.checkPassword(loginDTO.getPassword(), loginUser.getPassword());
 
         return true;
     }
@@ -62,7 +60,11 @@ public class UserServiceImpl implements UserService {
 
         try {
             // encode password
-            user.setPassword(getEncodedPassword(user.getPassword()));
+            user.setPassword(this.getEncodedPassword(user.getPassword()));
+
+            user.setFirstName(user.getFirstName().toLowerCase());
+            user.setLastName(user.getLastName().toLowerCase());
+
             userMapper.insertUser(user);
             // 여기 나중에 email verification 이나 가입 축하 메일 정도 보내도 될듯
             return user;
@@ -95,10 +97,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(UserDTO user) {
+        UserDTO userData = userMapper.selectUserWithPasswordById(user.getId());
+        this.checkPassword(user.getOldPassword(), userData.getPassword());
+
         try {
+
             // encode passwords
             user.setPassword(this.getEncodedPassword(user.getPassword()));
-            user.setOldPassword(this.getEncodedPassword(user.getOldPassword()));
+            user.setOldPassword(userData.getPassword());    // 이전에 encoded 된 비밀번호
 
             userMapper.updatePassword(user);
         } catch (Exception e) {
@@ -109,9 +115,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UserDTO user) {
         UserDTO userData = userMapper.selectUserWithPasswordByEmail(user.getEmail());
-        if (!this.getEncodedPassword(user.getPassword()).equals(userData.getPassword())) {
-            throw new GlobalException(USER_PW_NOT_MATCHED);
+
+        if (Objects.isNull(userData)) {
+            throw new GlobalException(USER_EMAIL_NOT_EXIST);
         }
+
+        this.checkPassword(user.getOldPassword(), userData.getPassword());
 
         try {
             userMapper.deleteUserById(userData.getId());
@@ -132,5 +141,11 @@ public class UserServiceImpl implements UserService {
 
     private String getEncodedPassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    private void checkPassword(String raw, String encoded) {
+        if (!passwordEncoder.matches(raw, encoded)) {
+            throw new GlobalException(USER_PW_NOT_MATCHED);
+        }
     }
 }

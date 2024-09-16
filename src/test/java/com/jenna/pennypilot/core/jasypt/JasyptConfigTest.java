@@ -33,12 +33,24 @@ public class JasyptConfigTest {
         String encryptText = encryptor.encrypt(plainText);
         String decryptText = encryptor.decrypt(encryptText);
 
+        String encryptUsername = encryptor.encrypt(plainUsername);
+        String decryptUsername = encryptor.decrypt(encryptUsername);
+        String encryptPassword = encryptor.encrypt(plainPassword);
+        String decryptPassword = encryptor.decrypt(encryptPassword);
+
         System.out.println("encryptKey: " + encryptKey);
         System.out.println("plainText: " + plainText);
-        System.out.println("encryptText: " + encryptText);
-        System.out.println("decryptText: " + decryptText);
 
-        System.out.println("encryptUsername: " + encryptor.encrypt(plainUsername));
-        System.out.println("encryptPassword: " + encryptor.encrypt(plainPassword));
+        System.out.println("encryptJdbcUrl: " + encryptText);
+        System.out.println("encryptUsername: " + encryptUsername);
+        System.out.println("encryptPassword: " + encryptPassword);
+
+        System.out.println("decryptJdbcUrl: " + decryptText);
+        System.out.println("decryptUsername: " + decryptUsername);
+        System.out.println("decryptPassword: " + decryptPassword);
+
+        System.out.println("111: " + encryptor.decrypt("CAvHrBBWAPM7IBYhdqDzYuLrY+iBx7xavhFYNeTloy8="));
+        System.out.println("222: " + encryptor.decrypt("nmbHwwK1mwNg1Jl/goY6z6Sxe7RtxGJDJnRjC52vXg8="));
+
     }
 }

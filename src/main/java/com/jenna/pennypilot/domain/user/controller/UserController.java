@@ -17,7 +17,7 @@ public class UserController {
     private final UserService userService;
 
     @Operation(summary = "로그인", description = "email / password")
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         return ResponseEntity.ok(userService.isLoginInfoMatch(loginDTO));
     }
@@ -28,7 +28,7 @@ public class UserController {
 
     @Operation(summary = "단일 사용자 정보 조회", description = "민감 정보(비밀번호) 제외")
     @GetMapping("")
-    public ResponseEntity<?> findUserById(@Parameter(description = "사용자 ID") @RequestParam int id) {
+    public ResponseEntity<?> findUserById(@Parameter(description = "사용자 ID") @RequestParam("id") int id) {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
@@ -45,7 +45,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "사용자 정보 업데이트", description = "username / firstName / lastName 변경 가능")
+    @Operation(summary = "사용자 정보 업데이트", description = "id 필요 // username / firstName / lastName 변경 가능")
     @PutMapping("")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
         userService.updateUser(user);
@@ -68,13 +68,13 @@ public class UserController {
 
     @Operation(summary = "이메일 중복 체크")
     @GetMapping("/validate/email")
-    public ResponseEntity<?> validateEmail(@RequestParam String email) {
+    public ResponseEntity<?> validateEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(userService.checkEmailAlreadyInUse(email));
     }
 
     @Operation(summary = "Username 중복 체크")
     @GetMapping("/validate/username")
-    public ResponseEntity<?> validateUsername(@RequestParam String username) {
+    public ResponseEntity<?> validateUsername(@RequestParam("username") String username) {
         return ResponseEntity.ok(userService.checkUsernameAlreadyInUse(username));
     }
 

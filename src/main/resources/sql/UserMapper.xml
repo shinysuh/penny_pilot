@@ -15,7 +15,8 @@
         FROM USERS
     </sql>
 
-    <select id="selectUserById" resultType="com.jenna.pennypilot.domain.user.dto.UserDTO" parameterType="java.lang.Integer">
+    <select id="selectUserById" resultType="com.jenna.pennypilot.domain.user.dto.UserDTO"
+            parameterType="java.lang.Integer">
         <include refid="selectUserSql"/>
         WHERE ID = #{id}
     </select>
@@ -64,6 +65,16 @@
         SELECT COUNT(*)
         FROM USERS
         WHERE EMAIL = #{email}
+    </select>
+
+    <select id="selectUserWithPasswordById" parameterType="java.lang.Integer"
+            resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
+        SELECT ID,
+               PASSWORD,
+               USERNAME,
+               EMAIL
+        FROM USERS
+        WHERE ID = #{id}
     </select>
 
     <select id="selectUserWithPasswordByEmail" parameterType="java.lang.String"

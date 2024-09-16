@@ -12,7 +12,7 @@ public interface UserMapper {
 
     List<UserDTO> selectAllUsers();
 
-    UserDTO insertUser(UserDTO user);
+    void insertUser(UserDTO user);
 
     void updateUser(UserDTO user);
 
@@ -24,6 +24,7 @@ public interface UserMapper {
 
     int checkEmailAlreadyInUse(String email);
 
-    UserDTO selectUserWithPasswordByEmail(String email);
+    UserDTO selectUserWithPasswordById(int id);
 
+    UserDTO selectUserWithPasswordByEmail(String email);
 }

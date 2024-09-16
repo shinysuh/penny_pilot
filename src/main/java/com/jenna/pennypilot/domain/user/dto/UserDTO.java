@@ -23,7 +23,7 @@ public class UserDTO {
     private String password;
 
     @Schema(description = "old password")
-    @JsonIgnore
+//    @JsonIgnore
     private String oldPassword;
 
     private String firstName;
