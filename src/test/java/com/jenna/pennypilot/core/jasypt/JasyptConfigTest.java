@@ -1,21 +1,28 @@
 package com.jenna.pennypilot.core.jasypt;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@Slf4j
 @SpringBootTest(properties = {"jasypt.encryptor.password=pennypenny"})
 public class JasyptConfigTest {
-    @Value("{jasypt.encryptor.password}")
+    @Value("${jasypt.encryptor.password}")
     private String encryptKey;
 
     @Test
     public void jasyptTest() {
-        String plainText = "jdbc:oracle:thin:@localhost:1521:xe";   // DB url
-        String plainUsername = "penny_pilot";    // username
-        String plainPassword = "qwer1234";  // password
+        Map<String, String> dbInfo = new LinkedHashMap<>();
+
+        dbInfo.put("url", "jdbc:oracle:thin:@localhost:1521:xe");
+        dbInfo.put("username", "penny_pilot");
+        dbInfo.put("password", "qwer1234");
 
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
@@ -30,27 +37,18 @@ public class JasyptConfigTest {
         config.setStringOutputType("base64");
         encryptor.setConfig(config);
 
-        String encryptText = encryptor.encrypt(plainText);
-        String decryptText = encryptor.decrypt(encryptText);
+        log.info("Encrypt Key: {}", encryptKey);
 
-        String encryptUsername = encryptor.encrypt(plainUsername);
-        String decryptUsername = encryptor.decrypt(encryptUsername);
-        String encryptPassword = encryptor.encrypt(plainPassword);
-        String decryptPassword = encryptor.decrypt(encryptPassword);
+        dbInfo.forEach((key, value) -> {
+            String encryptedText = encryptor.encrypt(value);
+            String decryptedText = encryptor.decrypt(encryptedText);
 
-        System.out.println("encryptKey: " + encryptKey);
-        System.out.println("plainText: " + plainText);
+            log.info("Encrypted {}: {}", key, encryptedText);
+            log.info("Decrypted {}: {}", key, decryptedText);
+        });
 
-        System.out.println("encryptJdbcUrl: " + encryptText);
-        System.out.println("encryptUsername: " + encryptUsername);
-        System.out.println("encryptPassword: " + encryptPassword);
-
-        System.out.println("decryptJdbcUrl: " + decryptText);
-        System.out.println("decryptUsername: " + decryptUsername);
-        System.out.println("decryptPassword: " + decryptPassword);
-
-        System.out.println("111: " + encryptor.decrypt("CAvHrBBWAPM7IBYhdqDzYuLrY+iBx7xavhFYNeTloy8="));
-        System.out.println("222: " + encryptor.decrypt("nmbHwwK1mwNg1Jl/goY6z6Sxe7RtxGJDJnRjC52vXg8="));
+//        System.out.println("111: " + encryptor.decrypt("ENC(gr2NWM+qDdmcDSEDPHIblTixPf46wZyuMNSIoPb8wNw=)"));
+//        System.out.println("222: " + encryptor.decrypt("ENC(vsl1up/0UxkjmGbU1NPD6Rrf2HvAO9Z9be5S7ceRUew=)"));
 
     }
 }
