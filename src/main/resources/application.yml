@@ -26,9 +26,11 @@ server:
       cookie:
         max-age: 18000
         name: PENNY_PILOT_JSESSIONID
-#logging:
+logging:
 #  config: classpath:log4j2.yml
-#  level:
+  level:
+#    root: INFO
+    org.springframework: DEBUG
 #    root: DEBUG
 #    org.springframework: DEBUG
 springdoc:
