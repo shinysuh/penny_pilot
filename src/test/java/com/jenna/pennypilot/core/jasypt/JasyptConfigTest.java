@@ -47,8 +47,8 @@ public class JasyptConfigTest {
             log.info("Decrypted {}: {}", key, decryptedText);
         });
 
-//        System.out.println("111: " + encryptor.decrypt("ENC(gr2NWM+qDdmcDSEDPHIblTixPf46wZyuMNSIoPb8wNw=)"));
-//        System.out.println("222: " + encryptor.decrypt("ENC(vsl1up/0UxkjmGbU1NPD6Rrf2HvAO9Z9be5S7ceRUew=)"));
+        log.info("username hard value: {}", encryptor.decrypt("/qRPiX/qFCQLKqOAduNI5VcqQtGsUyWDoLGCRRCYwbw="));
+        log.info("password hard value: {}", encryptor.decrypt("yPuP4hpCPGJMfyimsgPmrcwW0leC7fKn8FF7w6TqZIk="));
 
     }
 }
