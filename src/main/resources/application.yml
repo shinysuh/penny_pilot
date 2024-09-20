@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: ENC(ZJ/RZuBeV91DzVNknIt5aDaBePZaO44QjTq0hXpeilZTgnmuTp4RrdJiMHYeyuwu+hU//265fnU=)
-    username: ENC(kcrg3u/T4snp/DDn7DaYNv2sOjFMzjzNjHOmADHQ+18=)
-    password: ENC(/T/Zccjng3gtvG791QIXaGKdPn8wNBrslGNUcVsHae4=)
+    url: ENC(ZXLfMoRvUqqfxb9TjemdWIq8AIZQ7iIhhI1GBI43AcvTJHOcSPQYjlytdU688gl4KQg+HrRNZiU=)
+    username: ENC(/qRPiX/qFCQLKqOAduNI5VcqQtGsUyWDoLGCRRCYwbw=)
+    password: ENC(yPuP4hpCPGJMfyimsgPmrcwW0leC7fKn8FF7w6TqZIk=)
 #  servlet:
 #    multipart:
 #      max-file-size: 100MB
@@ -28,6 +28,9 @@ server:
         name: PENNY_PILOT_JSESSIONID
 #logging:
 #  config: classpath:log4j2.yml
+#  level:
+#    root: DEBUG
+#    org.springframework: DEBUG
 springdoc:
   api-docs:
     enabled: true
