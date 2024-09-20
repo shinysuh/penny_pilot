@@ -12,7 +12,7 @@ public interface UserMapper {
 
     List<UserDTO> selectAllUsers();
 
-    void insertUser(UserDTO user);
+    void addUser(UserDTO user);
 
     void updateUser(UserDTO user);
 

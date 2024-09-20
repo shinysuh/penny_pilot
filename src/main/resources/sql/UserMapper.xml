@@ -5,35 +5,38 @@
 <mapper namespace="com.jenna.pennypilot.domain.user.mapper.UserMapper">
 
     <sql id="selectUserSql">
-        SELECT ID,
-               USERNAME,
-               EMAIL,
-               FIRST_NAME,
-               LAST_NAME,
-               CREATED_AT,
-               UPDATED_AT
+        SELECT ID         AS id,
+               USERNAME   AS username,
+               EMAIL      AS email,
+               FIRST_NAME AS firstName,
+               LAST_NAME  AS lastName,
+               CREATED_AT AS createdAt,
+               UPDATED_AT AS updatedAt
         FROM USERS
     </sql>
 
     <select id="selectUserById" resultType="com.jenna.pennypilot.domain.user.dto.UserDTO"
             parameterType="java.lang.Integer">
+        /* UserMapper.selectUserById */
         <include refid="selectUserSql"/>
         WHERE ID = #{id}
     </select>
 
     <select id="selectAllUsers" resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
+        /* UserMapper.selectAllUsers */
         <include refid="selectUserSql"/>
         ORDER BY USERNAME ASC
     </select>
 
-    <insert id="insertUser" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO" useGeneratedKeys="true"
-            keyProperty="id" keyColumn="id">
-        INSERT INTO USERS(USERNAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME)
+    <insert id="addUser" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO" useGeneratedKeys="true"
+            keyColumn="id" keyProperty="id">
+        INSERT INTO /* UserMapper.addUser */
+            USERS(USERNAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME)
         VALUES (#{username}, #{email}, #{password}, #{firstName}, #{lastName})
     </insert>
 
     <update id="updateUser" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO">
-        UPDATE USERS
+        UPDATE USERS /* UserMapper.updateUser */
         SET USERNAME   = #{username},
             FIRST_NAME = #{firstName},
             LAST_NAME  = #{lastName},
@@ -42,7 +45,7 @@
     </update>
 
     <update id="updatePassword" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO">
-        UPDATE USERS
+        UPDATE USERS /* UserMapper.updatePassword */
         SET PASSWORD   = #{password},
             UPDATED_AT = SYSDATE
         WHERE ID = #{id}
@@ -50,39 +53,41 @@
     </update>
 
     <delete id="deleteUserById" parameterType="java.lang.Integer">
-        DELETE
+        DELETE /* UserMapper.deleteUserById */
         FROM USERS
         WHERE ID = #{id}
     </delete>
 
     <select id="checkUsernameAlreadyInUse" resultType="java.lang.Integer" parameterType="java.lang.String">
-        SELECT COUNT(*)
+        SELECT COUNT(*) /* UserMapper.checkUsernameAlreadyInUse */
         FROM USERS
         WHERE USERNAME = #{username}
     </select>
 
     <select id="checkEmailAlreadyInUse" resultType="java.lang.Integer" parameterType="java.lang.String">
-        SELECT COUNT(*)
+        SELECT COUNT(*) /* UserMapper.checkEmailAlreadyInUse */
         FROM USERS
         WHERE EMAIL = #{email}
     </select>
 
     <select id="selectUserWithPasswordById" parameterType="java.lang.Integer"
             resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
-        SELECT ID,
-               PASSWORD,
-               USERNAME,
-               EMAIL
+        SELECT /* UserMapper.selectUserWithPasswordById */
+            ID       AS id,
+            PASSWORD AS password,
+            USERNAME AS username,
+            EMAIL    AS email
         FROM USERS
         WHERE ID = #{id}
     </select>
 
     <select id="selectUserWithPasswordByEmail" parameterType="java.lang.String"
             resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
-        SELECT ID,
-               PASSWORD,
-               USERNAME,
-               EMAIL
+        SELECT /* UserMapper.selectUserWithPasswordByEmail */
+            ID       AS id,
+            PASSWORD AS password,
+            USERNAME AS username,
+            EMAIL    AS email
         FROM USERS
         WHERE EMAIL = #{email}
     </select>

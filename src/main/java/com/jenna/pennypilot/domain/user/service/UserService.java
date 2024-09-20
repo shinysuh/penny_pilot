@@ -9,9 +9,9 @@ public interface UserService {
 
     boolean isLoginInfoMatch(LoginDTO loginDTO);
 
-    UserDTO findUserById(int id);
+    UserDTO getUserById(int id);
 
-    List<UserDTO> findAllUsers();
+    List<UserDTO> getAllUsers();
 
     UserDTO addUser(UserDTO user);
 
