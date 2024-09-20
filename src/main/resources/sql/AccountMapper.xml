@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jenna.pennypilot.domain.account.mapper.AccountMapper">
+
+    <sql id="selectAccountSql">
+        SELECT ID           AS id,
+               USER_ID      AS userId,
+               BANK_NAME    AS bankName,
+               ACCOUNT_NAME AS accountName,
+               ACCOUNT_TYPE AS accountType,
+               BALANCE      AS balance,
+               CREATED_AT   AS createdAt,
+               UPDATED_AT   AS updatedAt
+        FROM ACCOUNTS
+    </sql>
+
+    <select id="selectAllAccountsByUserId" parameterType="java.lang.Integer"
+            resultType="com.jenna.pennypilot.domain.account.dto.AccountDTO">
+        /* AccountMapper.selectAllAccountsByUserId */
+        <include refid="selectAccountSql"/>
+        WHERE USER_ID = #{userId}
+        ORDER BY BANK_NAME, ACCOUNT_NAME, ACCOUNT_TYPE, CREATED_AT
+    </select>
+
+    <select id="selectAccountById" parameterType="java.lang.Integer"
+            resultType="com.jenna.pennypilot.domain.account.dto.AccountDTO">
+        /* AccountMapper.selectAccountById */
+        <include refid="selectAccountSql"/>
+        WHERE ID = #{id}
+    </select>
+
+    <insert id="addAccount" parameterType="com.jenna.pennypilot.domain.account.dto.AccountDTO"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        /* AccountMapper.addAccount */
+        INSERT INTO ACCOUNTS(USER_ID, BANK_NAME, ACCOUNT_NAME, ACCOUNT_TYPE, BALANCE)
+        VALUES (#{userId}, #{bankName}, #{accountName}, #{accountType}, #{balance})
+    </insert>
+
+    <update id="updateAccount" parameterType="com.jenna.pennypilot.domain.account.dto.AccountDTO">
+        /* AccountMapper.updateAccount */
+        UPDATE ACCOUNTS
+        SET BANK_NAME    = #{bankName},
+            ACCOUNT_NAME = #{accountName},
+            ACCOUNT_TYPE = #{accountType},
+            BALANCE      = #{balance},
+            UPDATED_AT   = SYSDATE
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteAccountById" parameterType="java.lang.Integer">
+        /* AccountMapper.deleteAccountById */
+        DELETE
+        FROM ACCOUNTS
+        WHERE ID = #{id}
+    </delete>
+
+</mapper>

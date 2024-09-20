@@ -21,12 +21,15 @@ public enum ErrorCode {
     USERNAME_ALREADY_EXISTS("USER007", "이미 사용중인 이름입니다.", BAD_REQUEST),
     USER_EMAIL_ALREADY_EXISTS("USER008", "이미 사용중인 이메일 주소입니다.", BAD_REQUEST),
     USER_REGISTER_ERROR("USER009", "회원가입 도중 오류가 발생했습니다. \n관리자에게 문의해주세요", INTERNAL_SERVER_ERROR),
-    USER_UPDATE_ERROR("USER010", "사용자 정보 수정 도중 오류가 발생했습니다. \n관리자에게 문의해주세요", INTERNAL_SERVER_ERROR),
-    USER_DELETE_ERROR("USER011", "회원 탈퇴 도중 오류가 발생했습니다. \n관리자에게 문의해주세요", INTERNAL_SERVER_ERROR),
+    USER_UPDATE_ERROR("USER010", "사용자 정보를 수정하는 도중 오류가 발생했습니다. \n관리자에게 문의해주세요", INTERNAL_SERVER_ERROR),
+    USER_DELETE_ERROR("USER011", "사용자 정보를 삭제하는 도중 오류가 발생했습니다. \n관리자에게 문의해주세요", INTERNAL_SERVER_ERROR),
 
     // accounts
     EMPTY_ACCOUNT_DATA("ACC001", "계좌 정보가 비어있습니다. 계좌 정보를 추가해주세요.", BAD_REQUEST),
-    ACCOUNT_CREATE_ERROR("ACC002", "계좌 정보를 생성하는 도중 오류가 발생했습니다. \n관리자에게 문의해주세요.", INTERNAL_SERVER_ERROR),
+    ACCOUNT_NOT_EXISTS("ACC002", "계좌 정보가 존재하지 않습니다.", BAD_REQUEST),
+//    ACCOUNT_CREATE_ERROR("ACC003", "계좌 정보를 생성하는 도중 오류가 발생했습니다. \n관리자에게 문의해주세요.", INTERNAL_SERVER_ERROR),
+//    ACCOUNT_UPDATE_ERROR("ACC004", "계좌 정보를 수정하는 도중 오류가 발생했습니다. \n관리자에게 문의해주세요.", INTERNAL_SERVER_ERROR),
+//    ACCOUNT_DELETE_ERROR("ACC005", "계좌 정보를 삭제하는 도중 오류가 발생했습니다. \n관리자에게 문의해주세요.", INTERNAL_SERVER_ERROR),
 
     // transactions
 
