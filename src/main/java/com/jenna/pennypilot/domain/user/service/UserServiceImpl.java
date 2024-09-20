@@ -35,13 +35,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findUserById(int id) {
-        return Optional.ofNullable(userMapper.selectUserById(id))
+    public UserDTO getUserById(int id) {
+        return Optional.of(userMapper.selectUserById(id))
                 .orElseThrow(() -> new GlobalException(USER_NOT_EXISTS));
     }
 
     @Override
-    public List<UserDTO> findAllUsers() {
+    public List<UserDTO> getAllUsers() {
 //        return Optional.of(userMapper.selectAllUsers())
 //                .orElseThrow(() -> new GlobalException(EMPTY_USER_DATA));
         return Optional.ofNullable(userMapper.selectAllUsers())
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
             user.setFirstName(user.getFirstName().toLowerCase());
             user.setLastName(user.getLastName().toLowerCase());
 
-            userMapper.insertUser(user);
+            userMapper.addUser(user);
             // 여기 나중에 email verification 이나 가입 축하 메일 정도 보내도 될듯
             return user;
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDTO user) {
-        UserDTO oldVersion = this.findUserById(user.getId());
+        UserDTO oldVersion = this.getUserById(user.getId());
 
         if (Objects.isNull(oldVersion)) {
             throw new GlobalException(USER_NOT_EXISTS);
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
             throw new GlobalException(USER_EMAIL_NOT_EXIST);
         }
 
-        this.checkPassword(user.getOldPassword(), userData.getPassword());
+        this.checkPassword(user.getPassword(), userData.getPassword());
 
         try {
             userMapper.deleteUserById(userData.getId());
