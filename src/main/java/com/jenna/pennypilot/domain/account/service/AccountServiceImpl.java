@@ -22,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<AccountDTO> getAllAccountsByUserId(int userId) {
 
-        // not logged in 확인
+        // TODO - 사용자 logged in 확인 && userId 일치 확인
 
         return Optional.ofNullable(accountMapper.selectAllAccountsByUserId(userId))
                 .orElseGet(ArrayList::new);
@@ -30,8 +30,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO getAccountDetailById(int id) {
-        return Optional.of(accountMapper.selectAccountById(id))
+        AccountDTO account = Optional.of(accountMapper.selectAccountById(id))
                 .orElseThrow(() -> new GlobalException(ACCOUNT_NOT_EXISTS));
+
+        // TODO - userId 가 현재 로그인 사용자 id 와 일치하는지 검증
+        int userId = account.getUserId();
+
+        return account;
     }
 
     @Override

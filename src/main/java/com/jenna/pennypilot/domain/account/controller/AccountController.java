@@ -14,7 +14,7 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @Operation(summary = "사용자의 전체 계좌 목록 조회", description = "userId 필요")
+    @Operation(summary = "사용자의 전체 계좌 목록 조회", description = "userId 기준")
     @GetMapping("/all/{userId}")
     public ResponseEntity<?> getAllAccountsByUserId(@PathVariable("userId") int userId) {
         return ResponseEntity.ok(accountService.getAllAccountsByUserId(userId));

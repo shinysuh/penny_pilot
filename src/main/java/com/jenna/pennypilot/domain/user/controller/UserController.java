@@ -23,7 +23,7 @@ public class UserController {
     }
 
 
-    // TODO - 로그인 사용자 정보 조회
+    // TODO - 현재 로그인 사용자 정보 조회
 
 
     @Operation(summary = "단일 사용자 정보 조회", description = "민감 정보(비밀번호) 제외")
@@ -58,7 +58,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "사용자 정보 삭제 (탈퇴)", description = "email / password 기준 삭제")
+    @Operation(summary = "사용자 정보 삭제 (탈퇴) - 사용자 하위 정보 일괄 삭제", description = "email / password 기준 삭제")
     @PostMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestBody UserDTO user) {
         userService.deleteUser(user);

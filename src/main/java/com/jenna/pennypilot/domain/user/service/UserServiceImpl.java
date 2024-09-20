@@ -7,6 +7,7 @@ import com.jenna.pennypilot.domain.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +113,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteUser(UserDTO user) {
         UserDTO userData = userMapper.selectUserWithPasswordByEmail(user.getEmail());
@@ -124,6 +126,11 @@ public class UserServiceImpl implements UserService {
 
         try {
             userMapper.deleteUserById(userData.getId());
+
+            /* TODO (개발 후반) - 사용자 하위 계좌, 카테고리, 버짓, 트랜잭션 일괄 삭제 기능 추가
+             *       >> 프론트에서 confirm 필요
+             * */
+
         } catch (Exception e) {
             throw new GlobalException(USER_DELETE_ERROR, e.getMessage());
         }
