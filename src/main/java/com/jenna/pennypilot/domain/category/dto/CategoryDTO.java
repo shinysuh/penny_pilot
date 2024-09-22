@@ -17,6 +17,10 @@ public class CategoryDTO {
 
     private String ctgNm;
 
+    private int seq;
+
+    private int oldSeq;     // seq 수정 시 사용
+
     private String createdAt;
 
     private String updatedAt;

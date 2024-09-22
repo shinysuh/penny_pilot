@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jenna.pennypilot.domain.category.mapper.CategoryMapper">
+
+    <sql id="selectCtgSql">
+        SELECT ID         AS id,
+               USER_ID    AS userId,
+               CTG_NM     AS ctgNm,
+               SEQ        AS seq,
+               CREATED_AT AS createdAt,
+               UPDATED_AT AS updatedAt
+        FROM CATEGORIES
+    </sql>
+
+    <select id="selectAllCtgsByUserId" parameterType="java.lang.Integer"
+            resultType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+        /* CategoryMapper.selectAllCtgsByUserId */
+        <include refid="selectCtgSql"/>
+        ORDER BY SEQ
+    </select>
+
+    <select id="selectCtgDetailById" parameterType="java.lang.Integer"
+            resultType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+        /* CategoryMapper.selectCtgDetailById */
+        <include refid="selectCtgSql"/>
+        WHERE ID = #{id}
+    </select>
+
+    <!-- 카테고리 순번 최대값 + 1 -->
+    <select id="getMaxSeq" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        /* CategoryMapper.getMaxSeq */
+        SELECT NVL(MAX((SEQ)), 0) + 1
+        FROM CATEGORIES
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <!-- 카테고리명 중복 확인 -->
+    <select id="checkCtgNm" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO"
+            resultType="java.lang.Integer">
+        /* CategoryMapper.checkCtgNm */
+        SELECT COUNT(*)
+        FROM CATEGORIES
+        WHERE USER_ID = ${userId}
+          AND CTG_NM = #{ctgNm}
+    </select>
+
+    <insert id="addCategory" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        /* CategoryMapper.addCategory */
+        INSERT INTO CATEGORIES(USER_ID, CTG_NM, SEQ)
+        VALUES (#{userId}, #{ctgNm}, #{seq})
+    </insert>
+
+    <update id="updateCategory" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+        /* CategoryMapper.updateCategory */
+        UPDATE CATEGORIES
+        SET CTG_NM     = #{ctgNm},
+            UPDATED_AT = SYSDATE
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteCategoryById" parameterType="java.lang.Integer">
+        /* CategoryMapper.deleteCategoryById */
+        DELETE
+        FROM CATEGORIES
+        WHERE ID = #{id}
+    </delete>
+
+    <!-- 현재 카테고리 순번 업데이트 -->
+    <update id="updateCtgSeq" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+        /* CategoryMapper.updateCtgSeq */
+        UPDATE CATEGORIES
+        SET SEQ        = #{seq},
+            UPDATED_AT = SYSDATE
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 사용자의 다른 카테고리들 순번 일괄 업데이트 -->
+    <update id="updateOtherCtgsSeqByUser" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+        /* CategoryMapper.updateOtherCtgsSeqByUser */
+        <![CDATA[
+        UPDATE CATEGORIES CTG
+        SET SEQ = (SELECT CASE
+                              WHEN SEQ > ${oldSeq} AND SEQ <= ${seq}
+                                  THEN SEQ - ${seq}
+                              WHEN SEQ < ${oldSeq} AND SEQ >= ${seq}
+                                  THEN SEQ + ${seq}
+                              ELSE SEQ
+                              END
+                   FROM CATEGORIES SUB
+                   WHERE CTG.ID = SUB.ID)
+        WHERE USER_ID = #{userId}
+          AND ((SEQ < ${oldSeq} AND SEQ >= ${seq}) OR (SEQ > ${oldSeq} AND SEQ <= ${seq}))
+          AND ID <> CTG.ID
+        ]]>
+    </update>
+
+    <!-- 카테고리 하나 삭제 시, 뒤 순번 카테고리들 하나씩 순번 올려주기 -->
+    <select id="seqsMinusOneIfCtgDeleted" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+        /* CategoryMapper.seqsMinusOneIfCtgDeleted */
+        UPDATE CATEGORIES
+        SET SEQ = SEQ - 1
+        <![CDATA[
+        WHERE USER_ID = #{userId}
+          AND SEQ > #{seq}
+        ]]>
+    </select>
+
+    <!-- 이미 존재하는 순번 입력 시, 해당 순번 및 이후 순번 카테고리들 순번 하나씩 뒤로 밀기 -->
+    <select id="seqsPlusOneIfCutsies" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+        /* CategoryMapper.seqsPlusOneIfCutsies */
+        <![CDATA[
+        UPDATE CATEGORIES CTG
+        SET SEQ = (SELECT CASE
+                              WHEN (SELECT COUNT(*)
+                                    FROM CATEGORIES
+                                    WHERE USER_ID = #{userId}
+                                      AND SEQ = #{seq}) > 0
+                                  THEN SEQ + 1
+                              ELSE SEQ
+                              END
+                   FROM CATEGORIES SUB
+                   WHERE CTG.ID = SUB.ID)
+        WHERE USER_ID = #{userId}
+          AND SEQ >= #{seq}
+        ]]>
+    </select>
+
+</mapper>

@@ -35,7 +35,8 @@ public enum ErrorCode {
 
 
     // categories
-
+    CATEGORY_NOT_EXISTS("CTG001", "카테고리(구분) 정보가 존재하지 않습니다.", BAD_REQUEST),
+    CATEGORY_ALREADY_EXISTS("CTG002", "이미 존재하는 카테고리 정보입니다.", BAD_REQUEST),
 
     // budgets
 

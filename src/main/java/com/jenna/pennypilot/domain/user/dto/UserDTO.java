@@ -1,6 +1,5 @@
 package com.jenna.pennypilot.domain.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +23,7 @@ public class UserDTO {
 
     @Schema(description = "old password")
 //    @JsonIgnore
-    private String oldPassword;
+    private String oldPassword;     // password 수정 시 사용
 
     private String firstName;
 
