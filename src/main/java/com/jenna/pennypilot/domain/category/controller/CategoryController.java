@@ -41,14 +41,14 @@ public class CategoryController {
 
     @Operation(summary = "카테고리(구분) 정보 삭제", description = "카테고리 id 기준")
     @DeleteMapping("/{userId}/{ctgId}")
-    public ResponseEntity<?> deleteCategoryById(@PathVariable int userId, @PathVariable int ctgId) {
+    public ResponseEntity<?> deleteCategoryById(@PathVariable("userId") int userId, @PathVariable("ctgId") int ctgId) {
         categoryService.deleteCategoryById(userId, ctgId);
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "카테고리(구분) 순번 업데이트", description = "필요 파라미터: id / userId / oldSeq / Seq, 순번 변경 && 수정 사항에 맞춰 다른 카테고리 순변 일괄 변경")
+    @Operation(summary = "카테고리(구분) 순번 업데이트", description = "필요 파라미터: id / userId / 새 seq, 순번 변경 && 수정 사항에 맞춰 다른 카테고리 순변 일괄 변경")
     @PutMapping("/seq/{ctgId}")
-    public ResponseEntity<?> updateCtgSeq(@PathVariable int ctgId, @RequestBody CategoryDTO category) {
+    public ResponseEntity<?> updateCtgSeq(@PathVariable("ctgId") int ctgId, @RequestBody CategoryDTO category) {
         category.setId(ctgId);
         categoryService.updateCtgSeq(category);
         return ResponseEntity.ok().build();

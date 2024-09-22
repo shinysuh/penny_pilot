@@ -18,6 +18,7 @@
             resultType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
         /* CategoryMapper.selectAllCtgsByUserId */
         <include refid="selectCtgSql"/>
+        WHERE USER_ID = #{userId}
         ORDER BY SEQ
     </select>
 
@@ -42,7 +43,7 @@
         /* CategoryMapper.checkCtgNm */
         SELECT COUNT(*)
         FROM CATEGORIES
-        WHERE USER_ID = ${userId}
+        WHERE USER_ID = #{userId}
           AND CTG_NM = #{ctgNm}
     </select>
 
@@ -83,17 +84,17 @@
         <![CDATA[
         UPDATE CATEGORIES CTG
         SET SEQ = (SELECT CASE
-                              WHEN SEQ > ${oldSeq} AND SEQ <= ${seq}
-                                  THEN SEQ - ${seq}
-                              WHEN SEQ < ${oldSeq} AND SEQ >= ${seq}
-                                  THEN SEQ + ${seq}
+                              WHEN SEQ > #{oldSeq} AND SEQ <= #{seq}
+                                  THEN SEQ - 1
+                              WHEN SEQ < #{oldSeq} AND SEQ >= #{seq}
+                                  THEN SEQ + 1
                               ELSE SEQ
                               END
                    FROM CATEGORIES SUB
                    WHERE CTG.ID = SUB.ID)
         WHERE USER_ID = #{userId}
-          AND ((SEQ < ${oldSeq} AND SEQ >= ${seq}) OR (SEQ > ${oldSeq} AND SEQ <= ${seq}))
-          AND ID <> CTG.ID
+          AND ((SEQ < #{oldSeq} AND SEQ >= #{seq}) OR (SEQ > #{oldSeq} AND SEQ <= #{seq}))
+          AND ID <> #{id}
         ]]>
     </update>
 

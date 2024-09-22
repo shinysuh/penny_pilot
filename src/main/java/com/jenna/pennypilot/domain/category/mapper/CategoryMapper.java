@@ -16,7 +16,7 @@ public interface CategoryMapper {
 
     int checkCtgNm(CategoryDTO category);
 
-    CategoryDTO addCategory(CategoryDTO category);
+    void addCategory(CategoryDTO category);
 
     void updateCategory(CategoryDTO category);
 
