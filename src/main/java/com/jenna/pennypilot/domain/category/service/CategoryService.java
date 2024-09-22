@@ -1,6 +1,7 @@
 package com.jenna.pennypilot.domain.category.service;
 
 import com.jenna.pennypilot.domain.category.dto.CategoryDTO;
+import com.jenna.pennypilot.domain.user.dto.UserDTO;
 
 import java.util.List;
 
@@ -17,5 +18,7 @@ public interface CategoryService {
     void deleteCategoryById(int userId, int ctgId);
 
     void updateCtgSeq(CategoryDTO category);
+
+    void addBasicCategories(UserDTO user);
 
 }

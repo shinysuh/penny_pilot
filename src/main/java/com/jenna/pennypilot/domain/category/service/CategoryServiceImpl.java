@@ -1,15 +1,15 @@
 package com.jenna.pennypilot.domain.category.service;
 
 import com.jenna.pennypilot.core.exception.GlobalException;
+import com.jenna.pennypilot.domain.category.constant.BasicCategory;
 import com.jenna.pennypilot.domain.category.dto.CategoryDTO;
 import com.jenna.pennypilot.domain.category.mapper.CategoryMapper;
+import com.jenna.pennypilot.domain.user.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.jenna.pennypilot.core.exception.ErrorCode.*;
 
@@ -86,6 +86,23 @@ public class CategoryServiceImpl implements CategoryService {
 
         // 카테고리 순번 업데이트
         categoryMapper.updateCtgSeq(category);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void addBasicCategories(UserDTO user) {
+        BasicCategory[] basics = BasicCategory.values();
+        Arrays.sort(basics, Comparator.comparingInt(BasicCategory::getSeq));
+
+        for (BasicCategory basic : basics) {
+            this.addCategory(
+                    CategoryDTO.builder()
+                            .userId(user.getId())
+                            .ctgNm(basic.getName())
+                            .seq(basic.getSeq())
+                            .build()
+            );
+        }
     }
 
     private boolean checkCtgNm(CategoryDTO category) {

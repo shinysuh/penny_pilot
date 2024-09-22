@@ -1,6 +1,7 @@
 package com.jenna.pennypilot.domain.user.service;
 
 import com.jenna.pennypilot.core.exception.GlobalException;
+import com.jenna.pennypilot.domain.category.service.CategoryService;
 import com.jenna.pennypilot.domain.user.dto.LoginDTO;
 import com.jenna.pennypilot.domain.user.dto.UserDTO;
 import com.jenna.pennypilot.domain.user.mapper.UserMapper;
@@ -23,6 +24,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    private final CategoryService categoryService;
+
     @Override
     public boolean isLoginInfoMatch(LoginDTO loginDTO) {
         UserDTO loginUser = userMapper.selectUserWithPasswordByEmail(loginDTO.getEmail());
@@ -37,18 +40,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserById(int id) {
-        return Optional.of(userMapper.selectUserById(id))
+        return Optional.ofNullable(userMapper.selectUserById(id))
                 .orElseThrow(() -> new GlobalException(USER_NOT_EXISTS));
     }
 
     @Override
     public List<UserDTO> getAllUsers() {
-//        return Optional.of(userMapper.selectAllUsers())
-//                .orElseThrow(() -> new GlobalException(EMPTY_USER_DATA));
         return Optional.ofNullable(userMapper.selectAllUsers())
                 .orElseGet(ArrayList::new);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public UserDTO addUser(UserDTO user) {
         // email validation
@@ -66,8 +68,14 @@ public class UserServiceImpl implements UserService {
             user.setFirstName(user.getFirstName().toLowerCase());
             user.setLastName(user.getLastName().toLowerCase());
 
+            // 사용자 정보 추가
             userMapper.addUser(user);
+
+            // 기본 카테고리 정보 추가
+            categoryService.addBasicCategories(user);
+
             // 여기 나중에 email verification 이나 가입 축하 메일 정도 보내도 될듯
+
             return user;
         } catch (Exception e) {
             throw new GlobalException(USER_REGISTER_ERROR, e.getMessage());
