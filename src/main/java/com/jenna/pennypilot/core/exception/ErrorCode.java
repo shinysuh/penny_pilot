@@ -33,6 +33,7 @@ public enum ErrorCode {
 
     // transactions
     TRANSACTION_NOT_EXISTS("TRA001", "거래 정보가 존재하지 않습니다.", BAD_REQUEST),
+    INVALID_TRANSACTION_DATE("TRA002", "적절하지 않은 날짜 정보입니다. 다시 확인해주세요.", BAD_REQUEST),
 
     // categories
     CATEGORY_NOT_EXISTS("CTG001", "카테고리(분류) 정보가 존재하지 않습니다.", BAD_REQUEST),

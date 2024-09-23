@@ -17,7 +17,7 @@ public class TransactionController {
 
 
     @Operation(summary = "사용자의 한 달 전체 거래 기록", description = "userId / transactionDate 기준")
-    @GetMapping("/month")
+    @PostMapping("/month")
     public ResponseEntity<?> getMonthlyTransactions(@RequestBody TransactionParamDTO params) {
         return ResponseEntity.ok(transactionService.getMonthlyTransactions(params));
     }

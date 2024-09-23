@@ -13,9 +13,9 @@ public interface TransactionMapper {
 
     List<TransactionResultDTO> selectAllTransactionsByMonth(TransactionParamDTO params);
 
-    TransactionResultDTO selectOneTransactionById(int id);
-
     List<DailyTransactionDTO> selectDailyTotalsByMonth(TransactionParamDTO params);
+
+    TransactionResultDTO selectOneTransactionById(int id);
 
     void addTransaction(TransactionDTO transaction);
 

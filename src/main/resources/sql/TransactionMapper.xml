@@ -5,22 +5,22 @@
 <mapper namespace="com.jenna.pennypilot.domain.transaction.mapper.TransactionMapper">
 
     <sql id="selectTransactionSql">
-        SELECT TA.ID               AS id,
-               TA.ACCOUNT_ID       AS accountId,
+        SELECT TR.ID               AS id,
+               TR.ACCOUNT_ID       AS accountId,
                AC.BANK_NAME        AS bankName,
                AC.ACCOUNT_NAME     AS accountName,
                AC.ACCOUNT_TYPE     AS accountType,
-               TA.CTG_ID           AS ctgId,
+               TR.CTG_ID           AS ctgId,
                CTG.CTG_NM          AS ctgNm,
-               TA.AMOUNT           AS amount,
-               TA.TRANSACTION_TYPE AS transactionType,
-               TA.TRANSACTION_DATE AS transactionDate,
-               TA.DESCRIPTION      AS description
-        FROM TRANSACTIONS TA
+               TR.AMOUNT           AS amount,
+               TR.TRANSACTION_TYPE AS transactionType,
+               TR.TRANSACTION_DATE AS transactionDate,
+               TR.DESCRIPTION      AS description
+        FROM TRANSACTIONS TR
                  INNER JOIN ACCOUNTS AC
-                            ON TA.ACCOUNT_ID = AC.ID
+                            ON TR.ACCOUNT_ID = AC.ID
                  INNER JOIN CATEGORIES CTG
-                            ON TA.CTG_ID = CTG.ID
+                            ON TR.CTG_ID = CTG.ID
     </sql>
 
     <select id="selectAllTransactionsByMonth"
@@ -29,16 +29,9 @@
     >
         /* TransactionMapper.selectAllTransactionsByMonth */
         <include refid="selectTransactionSql"/>
-        WHERE TO_CHAR(TRA.TRANSACTION_DATE, 'YYYY-MM') = #{transactionMonth}
-        AND ACC.USER_ID = #{userId}
-        ORDER BY TRA.TRANSACTION_DATE
-    </select>
-
-    <select id="selectOneTransactionById" parameterType="java.lang.Integer"
-            resultType="com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO">
-        /* TransactionMapper.getOneTransactionById */
-        <include refid="selectTransactionSql"/>
-        WHERE TA.ID = #{id}
+        WHERE TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM') = #{transactionMonth}
+        AND AC.USER_ID = #{userId}
+        ORDER BY TR.TRANSACTION_DATE DESC
     </select>
 
     <select id="selectDailyTotalsByMonth"
@@ -46,17 +39,22 @@
             resultType="com.jenna.pennypilot.domain.transaction.dto.DailyTransactionDTO"
     >
         /* TransactionMapper.selectDailyTotalsByMonth */
-        <![CDATA[
-        SELECT TO_CHAR(TRA.TRANSACTION_DATE, 'YYYY-MM-DD')                                AS day,
-               SUM(CASE WHEN TRA.TRANSACTION_TYPE = 'income' THEN TRA.AMOUNT ELSE 0 END)  AS totalIncome,
-               SUM(CASE WHEN TRA.TRANSACTION_TYPE = 'expense' THEN TRA.AMOUNT ELSE 0 END) AS totalExpense
-        FROM TRANSACTIONS TRA
-                 INNER JOIN ACCOUNTS ACC ON TRA.ACCOUNT_ID = ACC.ID
-        WHERE TO_CHAR(TRA.TRANSACTION_DATE, 'YYYY-MM') < #{transactionMonth}
-          AND ACC.USER_ID = #{userId}
-        GROUP BY TO_CHAR(TRA.TRANSACTION_DATE, 'YYYY-MM-DD')
-        ORDER BY day;
-        ]]>
+        SELECT TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM-DD')                               AS day,
+               SUM(CASE WHEN TR.TRANSACTION_TYPE = 'income' THEN TR.AMOUNT ELSE 0 END)  AS totalIncome,
+               SUM(CASE WHEN TR.TRANSACTION_TYPE = 'expense' THEN TR.AMOUNT ELSE 0 END) AS totalExpense
+        FROM TRANSACTIONS TR
+                 INNER JOIN ACCOUNTS AC ON TR.ACCOUNT_ID = AC.ID
+        WHERE TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM') = #{transactionMonth}
+          AND AC.USER_ID = #{userId}
+        GROUP BY TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM-DD')
+        ORDER BY day DESC
+    </select>
+
+    <select id="selectOneTransactionById" parameterType="java.lang.Integer"
+            resultType="com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO">
+        /* TransactionMapper.getOneTransactionById */
+        <include refid="selectTransactionSql"/>
+        WHERE TR.ID = #{id}
     </select>
 
     <insert id="addTransaction" parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionDTO"
