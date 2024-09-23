@@ -19,7 +19,7 @@ public class TransactionDTO {
 
     private long amount;
 
-    private String transactionType;
+    private String transactionType;     // 수입 / 지출 / 이체
 
     private String transactionDate;
 

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jenna.pennypilot.domain.transaction.mapper.TransactionMapper">
+
+    <sql id="selectTransactionSql">
+        SELECT TA.ID               AS id,
+               TA.ACCOUNT_ID       AS accountId,
+               AC.BANK_NAME        AS bankName,
+               AC.ACCOUNT_NAME     AS accountName,
+               AC.ACCOUNT_TYPE     AS accountType,
+               TA.CTG_ID           AS ctgId,
+               CTG.CTG_NM          AS ctgNm,
+               TA.AMOUNT           AS amount,
+               TA.TRANSACTION_TYPE AS transactionType,
+               TA.TRANSACTION_DATE AS transactionDate,
+               TA.DESCRIPTION      AS description
+        FROM TRANSACTIONS TA
+                 INNER JOIN ACCOUNTS AC
+                            ON TA.ACCOUNT_ID = AC.ID
+                 INNER JOIN CATEGORIES CTG
+                            ON TA.CTG_ID = CTG.ID
+    </sql>
+
+    <select id="selectAllTransactionsByMonth"
+            parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO"
+    >
+        /* TransactionMapper.selectAllTransactionsByMonth */
+        <include refid="selectTransactionSql"/>
+        WHERE TO_CHAR(TRA.TRANSACTION_DATE, 'YYYY-MM') = #{transactionMonth}
+        AND ACC.USER_ID = #{userId}
+        ORDER BY TRA.TRANSACTION_DATE
+    </select>
+
+    <select id="selectOneTransactionById" parameterType="java.lang.Integer"
+            resultType="com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO">
+        /* TransactionMapper.getOneTransactionById */
+        <include refid="selectTransactionSql"/>
+        WHERE TA.ID = #{id}
+    </select>
+
+    <select id="selectDailyTotalsByMonth"
+            parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dto.DailyTransactionDTO"
+    >
+        /* TransactionMapper.selectDailyTotalsByMonth */
+        <![CDATA[
+        SELECT TO_CHAR(TRA.TRANSACTION_DATE, 'YYYY-MM-DD')                                AS day,
+               SUM(CASE WHEN TRA.TRANSACTION_TYPE = 'income' THEN TRA.AMOUNT ELSE 0 END)  AS totalIncome,
+               SUM(CASE WHEN TRA.TRANSACTION_TYPE = 'expense' THEN TRA.AMOUNT ELSE 0 END) AS totalExpense
+        FROM TRANSACTIONS TRA
+                 INNER JOIN ACCOUNTS ACC ON TRA.ACCOUNT_ID = ACC.ID
+        WHERE TO_CHAR(TRA.TRANSACTION_DATE, 'YYYY-MM') < #{transactionMonth}
+          AND ACC.USER_ID = #{userId}
+        GROUP BY TO_CHAR(TRA.TRANSACTION_DATE, 'YYYY-MM-DD')
+        ORDER BY day;
+        ]]>
+    </select>
+
+    <insert id="addTransaction" parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionDTO"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        /* TransactionMapper.addTransaction */
+        INSERT INTO TRANSACTIONS(ACCOUNT_ID, CTG_ID, AMOUNT, TRANSACTION_TYPE, TRANSACTION_DATE, DESCRIPTION)
+        VALUES (#{accountId}, #{ctgId}, #{amount}, #{transactionType}, #{transactionDate}, #{description})
+    </insert>
+
+    <insert id="updateTransaction" parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionDTO">
+        /* TransactionMapper.updateTransaction */
+        UPDATE TRANSACTIONS
+        SET ACCOUNT_ID       = #{accountId},
+            CTG_ID           = #{ctgId},
+            AMOUNT           = #{amount},
+            TRANSACTION_TYPE = #{transactionType},
+            TRANSACTION_DATE = #{transactionDate},
+            DESCRIPTION      = #{description},
+            UPDATED_AT       = SYSDATE
+        WHERE ID = #{id}
+    </insert>
+
+    <insert id="deleteTransaction" parameterType="java.lang.Integer">
+        /* TransactionMapper.deleteTransaction */
+        DELETE
+        FROM TRANSACTIONS
+        WHERE ID = #{id}
+    </insert>
+
+</mapper>

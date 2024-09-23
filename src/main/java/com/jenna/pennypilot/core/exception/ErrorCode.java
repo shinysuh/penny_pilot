@@ -32,7 +32,7 @@ public enum ErrorCode {
 //    ACCOUNT_DELETE_ERROR("ACC005", "계좌 정보를 삭제하는 도중 오류가 발생했습니다. \n관리자에게 문의해주세요.", INTERNAL_SERVER_ERROR),
 
     // transactions
-
+    TRANSACTION_NOT_EXISTS("TRA001", "거래 정보가 존재하지 않습니다.", BAD_REQUEST),
 
     // categories
     CATEGORY_NOT_EXISTS("CTG001", "카테고리(분류) 정보가 존재하지 않습니다.", BAD_REQUEST),
