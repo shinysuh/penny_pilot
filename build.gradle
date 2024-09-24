@@ -1,45 +1,79 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.4-SNAPSHOT'
-	id 'io.spring.dependency-management' version '1.1.6'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4-SNAPSHOT'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'com.jenna'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/snapshot' }
+    mavenCentral()
+    maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-	implementation "com.oracle.database.jdbc:ojdbc11:21.7.0.0"
-	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
-	implementation 'org.projectlombok:lombok'
-//	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'  //swagger
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    implementation "com.oracle.database.jdbc:ojdbc11:21.7.0.0"
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+    implementation 'org.projectlombok:lombok'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'  //swagger
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
+
+def webappDir = 'src/main/webapp'
+
+task cleanDistAndStatic(type: Delete) {
+    doFirst {
+        delete "${project.projectDir}/src/main/resources/static/"
+        delete webappDir + "/dist/"
+    }
+    doLast {
+        File dir = new File("${project.projectDir}/src/main/resources/static/")
+        dir.mkdir()
+    }
+}
+
+task npmInstall(type: Exec) {
+    workingDir(webappDir)
+    commandLine 'npm', 'install'
+}
+
+task npmBuild(type: Exec) {
+    workingDir(webappDir)
+    commandLine 'npm', 'run', 'build'
+}
+
+task copyWebapp(type: Copy) {
+    from("$webappDir/dist")
+    into("src/main/resources/static")
+}
+
+// 개발환경에서는 주석처리
+//npmInstall.dependsOn(cleanDistAndStatic)
+//npmBuild.dependsOn(npmInstall)
+//copyWebapp.dependsOn(npmBuild)
+//compileJava.dependsOn(copyWebapp)
+
