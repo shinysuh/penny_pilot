@@ -1,12 +1,21 @@
 package com.jenna.pennypilot.domain.transaction.service;
 
 import com.jenna.pennypilot.core.exception.GlobalException;
+import com.jenna.pennypilot.domain.transaction.constant.PeriodType;
 import com.jenna.pennypilot.domain.transaction.constant.TransactionType;
-import com.jenna.pennypilot.domain.transaction.dto.*;
+import com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO;
+import com.jenna.pennypilot.domain.transaction.dto.TransactionDTO;
+import com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO;
+import com.jenna.pennypilot.domain.transaction.dto.ctg.TotalByCtgDTO;
+import com.jenna.pennypilot.domain.transaction.dto.ctg.TotalByPeriodDTO;
+import com.jenna.pennypilot.domain.transaction.dto.ctg.TotalByTypeDTO;
+import com.jenna.pennypilot.domain.transaction.dto.monthly.DailyTransactionDTO;
+import com.jenna.pennypilot.domain.transaction.dto.monthly.MonthlyTransactionDTO;
 import com.jenna.pennypilot.domain.transaction.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -21,10 +30,15 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionMapper transactionMapper;
 
+    /* TODO - 아래 메소드 리팩토링
+        && 다른 조건들도 적용 가능하게 변경 OR 메소드 생성 (day 부분 변경)
+                >> 다른 조건들: 은행별 / 계좌별 / 계좌타입별 / 거래타입별
+     */
 
     @Override
-    public MonthlyTransactionDTO getMonthlyTransactions(TransactionParamDTO params) {
+    public MonthlyTransactionDTO getMonthlyTransactions(PeriodParamDTO params) {
         // 날짜 형식 validation
+        params.setPeriodType(PeriodType.MONTH);
         this.validateDateFormat(params);
 
         // 날짜 / 총수입 / 총지출 정보 list
@@ -50,11 +64,49 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         return MonthlyTransactionDTO.builder()
-                .userId(params.getUserId())
-                .transactionMonth(params.getTransactionMonth())
+                .transactionMonth(params.getTransactionPeriod())
                 .totalIncome(monthlyTotalIncome)
                 .totalExpense(monthlyTotalExpense)
                 .transactionByDays(dailyTotals)
+                .build();
+    }
+
+    @Override
+    public TotalByPeriodDTO getCtgTotalByPeriod(PeriodParamDTO params, String periodType) {
+        // 날짜 형식 validation
+        this.setPeriodType(params, periodType);
+        this.validateDateFormat(params);
+
+        List<TotalByCtgDTO> ctgTotals = transactionMapper.selectCtgTotalsByPeriod(params);
+
+        // 수입, 지출
+        String[] types = {
+                TransactionType.INCOME.getType(),
+                TransactionType.EXPENSE.getType(),
+        };
+
+        List<TotalByTypeDTO> totalByTypes = new ArrayList<>();
+        long total;
+
+        for (String type : types) {
+            // 타입별 카테고리 total 내역
+            List<TotalByCtgDTO> ctgTotalByTypes = ctgTotals.stream()
+                    .filter(ctgTotal -> type.equalsIgnoreCase(ctgTotal.getTransactionType()))
+                    .toList();
+
+            // 타입별 total 집계
+            total = ctgTotalByTypes.stream().mapToLong(TotalByCtgDTO::getTotalAmount).sum();
+
+            totalByTypes.add(TotalByTypeDTO.builder()
+                    .transactionType(type)
+                    .totalAmount(total)
+                    .ctgTotals(ctgTotalByTypes)
+                    .build());
+        }
+
+        return TotalByPeriodDTO.builder()
+                .transactionPeriod(params.getTransactionPeriod())
+                .transactions(totalByTypes)
                 .build();
     }
 
@@ -85,12 +137,36 @@ public class TransactionServiceImpl implements TransactionService {
     /**
      * 거래 날짜 validation
      */
-    private void validateDateFormat(TransactionParamDTO params) {
-        String targetMonth = params.getTransactionMonth().substring(0, 7);
-        params.setTransactionMonth(targetMonth);
+    private void validateDateFormat(PeriodParamDTO params) {
+        int subStrEnd = 0;
+        String datePattern = "";
+        String periodFormat = "";
 
-        String datePattern = "^(\\d{4})-(0[1-9]|1[0-2])$";      // yyyy-mm
-        Matcher matcher = Pattern.compile(datePattern).matcher(targetMonth);
+        PeriodType periodType = params.getPeriodType();
+
+        switch (periodType) {
+            case YEAR -> {
+                subStrEnd = 4;
+                datePattern = "^\\d{4}$";
+                periodFormat = "YYYY";
+            }
+            case MONTH -> {
+                subStrEnd = 7;
+                datePattern = "^\\d{4}-(0[1-9]|1[0-2])$";
+                periodFormat = "YYYY-MM";
+            }
+            case DAY -> {
+                subStrEnd = 10;
+                datePattern = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$";
+                periodFormat = "YYYY-MM-DD";
+            }
+        }
+
+        String targetPeriod = params.getTransactionPeriod().substring(0, subStrEnd);
+        params.setTransactionPeriod(targetPeriod);
+        params.setPeriodFormat(periodFormat);
+
+        Matcher matcher = Pattern.compile(datePattern).matcher(targetPeriod);
 
         if (!matcher.matches()) throw new GlobalException(INVALID_TRANSACTION_DATE);
     }
@@ -104,5 +180,16 @@ public class TransactionServiceImpl implements TransactionService {
             case "transfer", "이체" -> transaction.setTransactionType(TransactionType.TRANSFER.getType());
             default -> transaction.setTransactionType(TransactionType.EXPENSE.getType());
         }
+    }
+
+    /**
+     * periodType 설정
+     */
+    private void setPeriodType(PeriodParamDTO params, String periodType) {
+        params.setPeriodType(
+                periodType.toLowerCase().equals(PeriodType.YEAR.getName()) ? PeriodType.YEAR
+                        : periodType.equals(PeriodType.DAY.getName()) ? PeriodType.DAY
+                        : PeriodType.MONTH
+        );
     }
 }

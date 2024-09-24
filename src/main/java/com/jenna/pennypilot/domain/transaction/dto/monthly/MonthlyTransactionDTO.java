@@ -1,4 +1,4 @@
-package com.jenna.pennypilot.domain.transaction.dto;
+package com.jenna.pennypilot.domain.transaction.dto.monthly;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MonthlyTransactionDTO {
-
-    private int userId;
 
     private String transactionMonth;  // yyyy-mm
 

@@ -1,5 +1,6 @@
-package com.jenna.pennypilot.domain.transaction.dto;
+package com.jenna.pennypilot.domain.transaction.dto.monthly;
 
+import com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO;
 import lombok.Data;
 
 import java.util.List;

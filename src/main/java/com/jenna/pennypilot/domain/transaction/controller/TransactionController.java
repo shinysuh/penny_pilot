@@ -1,7 +1,7 @@
 package com.jenna.pennypilot.domain.transaction.controller;
 
+import com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO;
 import com.jenna.pennypilot.domain.transaction.dto.TransactionDTO;
-import com.jenna.pennypilot.domain.transaction.dto.TransactionParamDTO;
 import com.jenna.pennypilot.domain.transaction.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +16,16 @@ public class TransactionController {
     private final TransactionService transactionService;
 
 
-    @Operation(summary = "사용자의 한 달 전체 거래 기록", description = "userId / transactionDate 기준")
+    @Operation(summary = "사용자의 월별 전체 거래 기록", description = "userId / transactionDate 기준")
     @PostMapping("/month")
-    public ResponseEntity<?> getMonthlyTransactions(@RequestBody TransactionParamDTO params) {
+    public ResponseEntity<?> getMonthlyTransactions(@RequestBody PeriodParamDTO params) {
         return ResponseEntity.ok(transactionService.getMonthlyTransactions(params));
+    }
+
+    @Operation(summary = "지정된 기간의 전체 거래 기록", description = "userId / transactionDate / periodType(year/month/day) 기준")
+    @PostMapping("/period/{periodType}")
+    public ResponseEntity<?> getCtgTotalByPeriod(@PathVariable("periodType") String periodType, @RequestBody PeriodParamDTO params) {
+        return ResponseEntity.ok(transactionService.getCtgTotalByPeriod(params, periodType));
     }
 
     @Operation(summary = "거래 기록 한개 조회", description = "id 기준")

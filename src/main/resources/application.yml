@@ -32,6 +32,7 @@ logging:
     root: INFO
     org.springframework: INFO
     com.jenna.pennypilot.domain: DEBUG
+#    org.mybatis: DEBUG
 #    org.apache.ibatis: DEBUG
 springdoc:
   api-docs:

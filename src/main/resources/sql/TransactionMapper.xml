@@ -24,19 +24,19 @@
     </sql>
 
     <select id="selectAllTransactionsByMonth"
-            parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionParamDTO"
+            parameterType="com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO"
             resultType="com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO"
     >
         /* TransactionMapper.selectAllTransactionsByMonth */
         <include refid="selectTransactionSql"/>
-        WHERE TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM') = #{transactionMonth}
+        WHERE TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM') = #{transactionPeriod}
         AND AC.USER_ID = #{userId}
         ORDER BY TR.TRANSACTION_DATE DESC
     </select>
 
     <select id="selectDailyTotalsByMonth"
-            parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionParamDTO"
-            resultType="com.jenna.pennypilot.domain.transaction.dto.DailyTransactionDTO"
+            parameterType="com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dto.monthly.DailyTransactionDTO"
     >
         /* TransactionMapper.selectDailyTotalsByMonth */
         SELECT TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM-DD')                               AS day,
@@ -44,10 +44,45 @@
                SUM(CASE WHEN TR.TRANSACTION_TYPE = 'expense' THEN TR.AMOUNT ELSE 0 END) AS totalExpense
         FROM TRANSACTIONS TR
                  INNER JOIN ACCOUNTS AC ON TR.ACCOUNT_ID = AC.ID
-        WHERE TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM') = #{transactionMonth}
+        WHERE TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM') = #{transactionPeriod}
           AND AC.USER_ID = #{userId}
         GROUP BY TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM-DD')
         ORDER BY day DESC
+    </select>
+
+    <select id="selectTypeTotalsByPeriod"
+            parameterType="com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dto.ctg.TotalByTypeDTO"
+    >
+        /* TransactionMapper.selectTypeTotalsByPeriod */
+        SELECT TR.TRANSACTION_TYPE AS transactionType,
+               SUM(AMOUNT)         AS totalAmount
+        FROM TRANSACTIONS TR
+                 INNER JOIN ACCOUNTS AC ON TR.ACCOUNT_ID = AC.ID
+        WHERE TO_CHAR(TR.TRANSACTION_DATE, #{periodFormat}) = #{transactionPeriod}
+          AND AC.USER_ID = #{userId}
+        GROUP BY TR.TRANSACTION_TYPE
+        ORDER BY transactionType DESC
+    </select>
+
+    <select id="selectCtgTotalsByPeriod"
+            parameterType="com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dto.ctg.TotalByCtgDTO"
+    >
+        /* TransactionMapper.selectCtgTotalsByPeriod */
+        SELECT TR.TRANSACTION_TYPE AS transactionType,
+               TR.CTG_ID           AS ctgId,
+               CTG.CTG_NM          AS ctgNm,
+               SUM(AMOUNT)         AS totalAmount
+        FROM TRANSACTIONS TR
+                 INNER JOIN ACCOUNTS AC
+                            ON TR.ACCOUNT_ID = AC.ID
+                 INNER JOIN CATEGORIES CTG
+                            ON TR.CTG_ID = CTG.ID
+        WHERE TO_CHAR(TR.TRANSACTION_DATE, #{periodFormat}) = #{transactionPeriod}
+          AND AC.USER_ID = #{userId}
+        GROUP BY TR.CTG_ID, CTG.CTG_NM, TR.TRANSACTION_TYPE
+        ORDER BY totalAmount DESC
     </select>
 
     <select id="selectOneTransactionById" parameterType="java.lang.Integer"
