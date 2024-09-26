@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // H2 콘솔 사용을 위한 설정
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers(
+                                        "/api/**",  // TODO - 개발 후 삭제 요망
                                         "/",
                                         "/v3/api-docs/**",
                                         "/swagger/**",
