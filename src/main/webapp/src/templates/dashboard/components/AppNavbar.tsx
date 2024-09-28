@@ -59,7 +59,11 @@ export default function AppNavbar() {
         >
           <Stack direction="row" spacing={1} sx={{ justifyContent: 'center' }}>
             <CustomIcon />
-            <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
+            <Typography
+              variant="h4"
+              component="h1"
+              sx={{ color: 'text.primary' }}
+            >
               Dashboard
             </Typography>
           </Stack>

@@ -42,7 +42,6 @@ export default function AppTheme({
             ...navigationCustomizations,
             ...surfacesCustomizations,
             ...themeComponents,
-            
           },
         });
   }, [disableCustomTheme, themeComponents]);

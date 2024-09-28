@@ -102,7 +102,12 @@ interface CustomLabelProps {
   expandable?: boolean;
 }
 
-function CustomLabel({ color, expandable, children, ...other }: CustomLabelProps) {
+function CustomLabel({
+  color,
+  expandable,
+  children,
+  ...other
+}: CustomLabelProps) {
   const theme = useTheme();
   const colors = {
     blue: (theme.vars || theme).palette.primary.main,
