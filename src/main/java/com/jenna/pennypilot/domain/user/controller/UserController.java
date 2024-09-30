@@ -27,8 +27,8 @@ public class UserController {
 
 
     @Operation(summary = "단일 사용자 정보 조회", description = "민감 정보(비밀번호) 제외")
-    @GetMapping("")
-    public ResponseEntity<?> getUserById(@Parameter(description = "사용자 ID") @RequestParam("id") int id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@Parameter(description = "사용자 ID") @PathVariable("id") int id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
