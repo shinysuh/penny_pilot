@@ -14,6 +14,10 @@ import Box from '@mui/material/Box';
 import Header from './components/Header.tsx';
 import MainGrid from './components/MainGrid.tsx';
 import Stack from '@mui/material/Stack';
+import { StatCardProps } from './components/StatCard.tsx';
+import { useGetMonthlyTransactionsMutation } from '../../service/TransactionService.ts';
+import { IPeriodParam } from '../../interface/TransactionInterface.ts';
+import { getCurrentDateByPeriodType } from '../../util/DateData.ts';
 
 const themeComponents = {
   ...chartsCustomizations,
@@ -23,6 +27,36 @@ const themeComponents = {
 };
 
 const Dashboard = () => {
+  const data: StatCardProps[] = [
+    {
+      title: 'Income',
+      value: '14k',
+      interval: 'Last 30 days',
+      trend: 'up',
+      data: [
+        200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360,
+        340, 380, 360, 400, 380, 420, 400, 640, 340, 460, 440, 480, 460, 600,
+        880, 920,
+      ],
+    },
+  ];
+
+  const [getMonthlyTransactions] = useGetMonthlyTransactionsMutation();
+
+  React.useEffect(() => {
+    console.log('&&&&&&&&&&&&&&&&&&&&&&&', getCurrentDateByPeriodType);
+    const params: IPeriodParam = {
+      userId: 3, // TODO - 동적 적용
+      transactionPeriod: getCurrentDateByPeriodType,
+    };
+
+    getMonthlyTransactions(params)
+      .unwrap()
+      .then((monthlyTra) => {
+        console.log('##################### monthly result:', monthlyTra);
+      });
+  }, []);
+
   return (
     <React.Fragment>
       <AppTheme disableCustomTheme={false} themeComponents={themeComponents}>
