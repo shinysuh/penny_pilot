@@ -9,5 +9,5 @@ export const ApiRequestType: ApiRequestType = {
   GET: 'GET',
   POST: 'POST',
   PUT: 'PUT',
-  DELETE: 'DELETE'
+  DELETE: 'DELETE',
 };

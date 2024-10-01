@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended" // Prettier 설정 추가
+  ],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error" // Prettier 규칙을 ESLint에서 에러로 처리
+  }
+}
