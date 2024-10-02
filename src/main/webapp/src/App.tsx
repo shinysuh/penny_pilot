@@ -1,10 +1,10 @@
-import * as React from 'react';
-import './App.css';
-import { BrowserRouter } from 'react-router-dom';
-import AppRoutes from './route.tsx';
+import * as React from 'react'
+import './App.css'
+import { BrowserRouter } from 'react-router-dom'
+import AppRoutes from './route.tsx'
 
 function App() {
-  const [showDashboard, setShowDashboard] = React.useState<boolean>(true);
+  const [showDashboard, setShowDashboard] = React.useState<boolean>(true)
   return (
     <React.Suspense>
       <BrowserRouter>
@@ -17,7 +17,7 @@ function App() {
         <AppRoutes showDashboard={showDashboard} />
       </BrowserRouter>
     </React.Suspense>
-  );
+  )
 }
 
-export default App;
+export default App
