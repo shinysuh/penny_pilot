@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jenna.pennypilot.domain.user.mapper.UserMapper">
+<mapper namespace="com.jenna.pennypilot.domain.user.mappers.UserMapper">
 
     <sql id="selectUserSql">
         SELECT ID         AS id,
@@ -15,27 +15,27 @@
         FROM USERS
     </sql>
 
-    <select id="selectUserById" resultType="com.jenna.pennypilot.domain.user.dto.UserDTO"
+    <select id="selectUserById" resultType="com.jenna.pennypilot.domain.user.dtos.UserDTO"
             parameterType="java.lang.Integer">
         /* UserMapper.selectUserById */
         <include refid="selectUserSql"/>
         WHERE ID = #{id}
     </select>
 
-    <select id="selectAllUsers" resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
+    <select id="selectAllUsers" resultType="com.jenna.pennypilot.domain.user.dtos.UserDTO">
         /* UserMapper.selectAllUsers */
         <include refid="selectUserSql"/>
         ORDER BY USERNAME ASC
     </select>
 
-    <insert id="addUser" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO" useGeneratedKeys="true"
+    <insert id="addUser" parameterType="com.jenna.pennypilot.domain.user.dtos.UserDTO" useGeneratedKeys="true"
             keyColumn="id" keyProperty="id">
         /* UserMapper.addUser */
         INSERT INTO USERS(USERNAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME)
         VALUES (#{username}, #{email}, #{password}, #{firstName}, #{lastName})
     </insert>
 
-    <update id="updateUser" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO">
+    <update id="updateUser" parameterType="com.jenna.pennypilot.domain.user.dtos.UserDTO">
         /* UserMapper.updateUser */
         UPDATE USERS
         SET USERNAME   = #{username},
@@ -45,7 +45,7 @@
         WHERE ID = #{id}
     </update>
 
-    <update id="updatePassword" parameterType="com.jenna.pennypilot.domain.user.dto.UserDTO">
+    <update id="updatePassword" parameterType="com.jenna.pennypilot.domain.user.dtos.UserDTO">
         /* UserMapper.updatePassword */
         UPDATE USERS
         SET PASSWORD   = #{password},
@@ -76,7 +76,7 @@
     </select>
 
     <select id="selectUserWithPasswordById" parameterType="java.lang.Integer"
-            resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
+            resultType="com.jenna.pennypilot.domain.user.dtos.UserDTO">
         /* UserMapper.selectUserWithPasswordById */
         SELECT ID       AS id,
                PASSWORD AS password,
@@ -87,7 +87,7 @@
     </select>
 
     <select id="selectUserWithPasswordByEmail" parameterType="java.lang.String"
-            resultType="com.jenna.pennypilot.domain.user.dto.UserDTO">
+            resultType="com.jenna.pennypilot.domain.user.dtos.UserDTO">
         /* UserMapper.selectUserWithPasswordByEmail */
         SELECT ID       AS id,
                PASSWORD AS password,

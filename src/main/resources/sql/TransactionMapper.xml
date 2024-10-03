@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jenna.pennypilot.domain.transaction.mapper.TransactionMapper">
+<mapper namespace="com.jenna.pennypilot.domain.transaction.mappers.TransactionMapper">
 
     <sql id="selectTransactionSql">
         SELECT TR.ID               AS id,
@@ -24,19 +24,19 @@
     </sql>
 
     <select id="selectAllTransactionsByMonth"
-            parameterType="com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO"
-            resultType="com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO"
+            parameterType="com.jenna.pennypilot.domain.transaction.dtos.PeriodParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dtos.TransactionResultDTO"
     >
         /* TransactionMapper.selectAllTransactionsByMonth */
         <include refid="selectTransactionSql"/>
         WHERE TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM') = #{transactionPeriod}
         AND AC.USER_ID = #{userId}
-        ORDER BY TR.TRANSACTION_DATE DESC
+        ORDER BY TR.TRANSACTION_DATE DESC, ID DESC
     </select>
 
     <select id="selectDailyTotalsByMonth"
-            parameterType="com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO"
-            resultType="com.jenna.pennypilot.domain.transaction.dto.monthly.DailyTransactionDTO"
+            parameterType="com.jenna.pennypilot.domain.transaction.dtos.PeriodParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dtos.monthly.DailyTransactionDTO"
     >
         /* TransactionMapper.selectDailyTotalsByMonth */
         SELECT TO_CHAR(TR.TRANSACTION_DATE, 'YYYY-MM-DD')                               AS day,
@@ -51,8 +51,8 @@
     </select>
 
     <select id="selectTypeTotalsByPeriod"
-            parameterType="com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO"
-            resultType="com.jenna.pennypilot.domain.transaction.dto.ctg.TotalByTypeDTO"
+            parameterType="com.jenna.pennypilot.domain.transaction.dtos.PeriodParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dtos.ctg.TotalByTypeDTO"
     >
         /* TransactionMapper.selectTypeTotalsByPeriod */
         SELECT TR.TRANSACTION_TYPE AS transactionType,
@@ -66,8 +66,8 @@
     </select>
 
     <select id="selectCtgTotalsByPeriod"
-            parameterType="com.jenna.pennypilot.domain.transaction.dto.PeriodParamDTO"
-            resultType="com.jenna.pennypilot.domain.transaction.dto.ctg.TotalByCtgDTO"
+            parameterType="com.jenna.pennypilot.domain.transaction.dtos.PeriodParamDTO"
+            resultType="com.jenna.pennypilot.domain.transaction.dtos.ctg.TotalByCtgDTO"
     >
         /* TransactionMapper.selectCtgTotalsByPeriod */
         SELECT TR.TRANSACTION_TYPE AS transactionType,
@@ -86,20 +86,20 @@
     </select>
 
     <select id="selectOneTransactionById" parameterType="java.lang.Integer"
-            resultType="com.jenna.pennypilot.domain.transaction.dto.TransactionResultDTO">
+            resultType="com.jenna.pennypilot.domain.transaction.dtos.TransactionResultDTO">
         /* TransactionMapper.getOneTransactionById */
         <include refid="selectTransactionSql"/>
         WHERE TR.ID = #{id}
     </select>
 
-    <insert id="addTransaction" parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionDTO"
+    <insert id="addTransaction" parameterType="com.jenna.pennypilot.domain.transaction.dtos.TransactionDTO"
             useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         /* TransactionMapper.addTransaction */
         INSERT INTO TRANSACTIONS(ACCOUNT_ID, CTG_ID, AMOUNT, TRANSACTION_TYPE, TRANSACTION_DATE, DESCRIPTION)
         VALUES (#{accountId}, #{ctgId}, #{amount}, #{transactionType}, #{transactionDate}, #{description})
     </insert>
 
-    <insert id="updateTransaction" parameterType="com.jenna.pennypilot.domain.transaction.dto.TransactionDTO">
+    <insert id="updateTransaction" parameterType="com.jenna.pennypilot.domain.transaction.dtos.TransactionDTO">
         /* TransactionMapper.updateTransaction */
         UPDATE TRANSACTIONS
         SET ACCOUNT_ID       = #{accountId},

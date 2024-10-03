@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jenna.pennypilot.domain.category.mapper.CategoryMapper">
+<mapper namespace="com.jenna.pennypilot.domain.category.mappers.CategoryMapper">
 
     <sql id="selectCtgSql">
         SELECT ID         AS id,
@@ -15,7 +15,7 @@
     </sql>
 
     <select id="selectAllCtgsByUserId" parameterType="java.lang.Integer"
-            resultType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+            resultType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO">
         /* CategoryMapper.selectAllCtgsByUserId */
         <include refid="selectCtgSql"/>
         WHERE USER_ID = #{userId}
@@ -23,7 +23,7 @@
     </select>
 
     <select id="selectCtgDetailById" parameterType="java.lang.Integer"
-            resultType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+            resultType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO">
         /* CategoryMapper.selectCtgDetailById */
         <include refid="selectCtgSql"/>
         WHERE ID = #{id}
@@ -38,7 +38,7 @@
     </select>
 
     <!-- 카테고리명 중복 확인 -->
-    <select id="checkCtgNm" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO"
+    <select id="checkCtgNm" parameterType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO"
             resultType="java.lang.Integer">
         /* CategoryMapper.checkCtgNm */
         SELECT COUNT(*)
@@ -47,14 +47,14 @@
           AND CTG_NM = #{ctgNm}
     </select>
 
-    <insert id="addCategory" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO"
+    <insert id="addCategory" parameterType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         /* CategoryMapper.addCategory */
         INSERT INTO CATEGORIES(USER_ID, CTG_NM, SEQ)
         VALUES (#{userId}, #{ctgNm}, #{seq})
     </insert>
 
-    <update id="updateCategory" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+    <update id="updateCategory" parameterType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO">
         /* CategoryMapper.updateCategory */
         UPDATE CATEGORIES
         SET CTG_NM     = #{ctgNm},
@@ -70,7 +70,7 @@
     </delete>
 
     <!-- 현재 카테고리 순번 업데이트 -->
-    <update id="updateCtgSeq" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+    <update id="updateCtgSeq" parameterType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO">
         /* CategoryMapper.updateCtgSeq */
         UPDATE CATEGORIES
         SET SEQ        = #{seq},
@@ -79,7 +79,7 @@
     </update>
 
     <!-- 사용자의 다른 카테고리들 순번 일괄 업데이트 -->
-    <update id="updateOtherCtgsSeqByUser" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+    <update id="updateOtherCtgsSeqByUser" parameterType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO">
         /* CategoryMapper.updateOtherCtgsSeqByUser */
         <![CDATA[
         UPDATE CATEGORIES CTG
@@ -99,7 +99,7 @@
     </update>
 
     <!-- 카테고리 하나 삭제 시, 뒤 순번 카테고리들 하나씩 순번 올려주기 -->
-    <select id="seqsMinusOneIfCtgDeleted" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+    <select id="seqsMinusOneIfCtgDeleted" parameterType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO">
         /* CategoryMapper.seqsMinusOneIfCtgDeleted */
         UPDATE CATEGORIES
         SET SEQ = SEQ - 1
@@ -110,7 +110,7 @@
     </select>
 
     <!-- 이미 존재하는 순번 입력 시, 해당 순번 및 이후 순번 카테고리들 순번 하나씩 뒤로 밀기 -->
-    <select id="seqsPlusOneIfCutsies" parameterType="com.jenna.pennypilot.domain.category.dto.CategoryDTO">
+    <select id="seqsPlusOneIfCutsies" parameterType="com.jenna.pennypilot.domain.category.dtos.CategoryDTO">
         /* CategoryMapper.seqsPlusOneIfCutsies */
         <![CDATA[
         UPDATE CATEGORIES CTG

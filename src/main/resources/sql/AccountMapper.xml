@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jenna.pennypilot.domain.account.mapper.AccountMapper">
+<mapper namespace="com.jenna.pennypilot.domain.account.mappers.AccountMapper">
 
     <sql id="selectAccountSql">
         SELECT ID           AS id,
@@ -17,7 +17,7 @@
     </sql>
 
     <select id="selectAllAccountsByUserId" parameterType="java.lang.Integer"
-            resultType="com.jenna.pennypilot.domain.account.dto.AccountDTO">
+            resultType="com.jenna.pennypilot.domain.account.dtos.AccountDTO">
         /* AccountMapper.selectAllAccountsByUserId */
         <include refid="selectAccountSql"/>
         WHERE USER_ID = #{userId}
@@ -25,20 +25,20 @@
     </select>
 
     <select id="selectAccountById" parameterType="java.lang.Integer"
-            resultType="com.jenna.pennypilot.domain.account.dto.AccountDTO">
+            resultType="com.jenna.pennypilot.domain.account.dtos.AccountDTO">
         /* AccountMapper.selectAccountById */
         <include refid="selectAccountSql"/>
         WHERE ID = #{id}
     </select>
 
-    <insert id="addAccount" parameterType="com.jenna.pennypilot.domain.account.dto.AccountDTO"
+    <insert id="addAccount" parameterType="com.jenna.pennypilot.domain.account.dtos.AccountDTO"
             useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         /* AccountMapper.addAccount */
         INSERT INTO ACCOUNTS(USER_ID, BANK_NAME, ACCOUNT_NAME, ACCOUNT_TYPE, BALANCE)
         VALUES (#{userId}, #{bankName}, #{accountName}, #{accountType}, #{balance})
     </insert>
 
-    <update id="updateAccount" parameterType="com.jenna.pennypilot.domain.account.dto.AccountDTO">
+    <update id="updateAccount" parameterType="com.jenna.pennypilot.domain.account.dtos.AccountDTO">
         /* AccountMapper.updateAccount */
         UPDATE ACCOUNTS
         SET BANK_NAME    = #{bankName},
