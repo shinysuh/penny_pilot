@@ -1,8 +1,8 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ILogin, IUser } from '../interface/UserInterface.ts';
-import { ApiRequestType } from '../type/ApiRequestType.ts';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { ILogin, IUser } from '../interfaces/UserInterface.ts'
+import { ApiRequestType } from '../types/ApiRequestType.ts'
 
-const USER_TAG: string = 'Users';
+const USER_TAG: string = 'Users'
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -73,7 +73,7 @@ export const userApi = createApi({
       }),
     }),
   }),
-});
+})
 
 // hooks export
 export const {
@@ -86,4 +86,4 @@ export const {
   useDeleteUserMutation,
   useValidateEmailMutation,
   useValidateUsernameMutation,
-} = userApi;
+} = userApi

@@ -17,7 +17,7 @@ import MainChartGrid from './custom/MainChartGrid.tsx'
 import {
   getCurrentDateByPeriodType,
   getDateFormatByPeriodType,
-} from '../../util/DateData.ts'
+} from '../../utils/DateTimeData.ts'
 
 const themeComponents = {
   ...chartsCustomizations,

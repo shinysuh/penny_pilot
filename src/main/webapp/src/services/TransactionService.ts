@@ -1,14 +1,14 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ApiRequestType } from '../type/ApiRequestType.ts';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { ApiRequestType } from '../types/ApiRequestType.ts'
 import {
   IMonthlyTransaction,
   IPeriodParam,
   ITotalByPeriod,
   ITransaction,
   ITransactionResult,
-} from '../interface/TransactionInterface.ts';
+} from '../interfaces/TransactionInterface.ts'
 
-const TRA_TAG: string = 'Transactions';
+const TRA_TAG: string = 'Transactions'
 
 export const transactionApi = createApi({
   reducerPath: 'transactionApi',
@@ -61,7 +61,7 @@ export const transactionApi = createApi({
       invalidatesTags: [TRA_TAG],
     }),
   }),
-});
+})
 
 export const {
   useGetMonthlyTransactionsMutation,
@@ -70,4 +70,4 @@ export const {
   useAddTransactionMutation,
   useUpdateTransactionMutation,
   useDeleteTransactionMutation,
-} = transactionApi;
+} = transactionApi
