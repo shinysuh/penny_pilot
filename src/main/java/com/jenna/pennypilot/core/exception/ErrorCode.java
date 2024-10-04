@@ -18,7 +18,7 @@ public enum ErrorCode {
     // users
     USER_NOT_EXISTS("USER001", "사용자 정보가 존재하지 않습니다.", BAD_REQUEST),
     EMPTY_USER_DATA("USER002", "사용자 데이터가 비어있습니다.", BAD_REQUEST),
-    USER_EMAIL_NOT_EXIST("USER003", "사용자 이메일이 존재하지 않습니다.", BAD_REQUEST),
+    USER_EMAIL_NOT_EXISTS("USER003", "사용자 이메일이 존재하지 않습니다.", BAD_REQUEST),
     USER_PW_NOT_MATCHED("USER004", "비밀번호가 일치하지 않습니다.", BAD_REQUEST),
     USERNAME_ALREADY_EXISTS("USER005", "이미 사용중인 이름입니다.", BAD_REQUEST),
     USER_EMAIL_ALREADY_EXISTS("USER006", "이미 사용중인 이메일 주소입니다.", BAD_REQUEST),
@@ -39,6 +39,10 @@ public enum ErrorCode {
     CATEGORY_ALREADY_EXISTS("CTG002", "이미 존재하는 카테고리 정보입니다.", BAD_REQUEST),
 
     // budgets
+
+    // currency
+    CURRENCY_NOT_EXISTS("CURR001", "통화 정보가 존재하지 않습니다.", BAD_REQUEST),
+    CURRENCY_ALREADY_EXISTS("CURR002", "이미 존재하는 통화 정보입니다.", BAD_REQUEST),
 
     ;
 

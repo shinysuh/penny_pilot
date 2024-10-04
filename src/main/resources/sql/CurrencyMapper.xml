@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jenna.pennypilot.domain.currency.mappers.CurrencyMapper">
+
+    <sql id="selectCurrencySql">
+        SELECT CODE    AS code,
+               NAME    AS name,
+               COUNTRY AS country
+        FROM CURRENCY
+    </sql>
+
+    <select id="selectAllCurrencies" resultType="com.jenna.pennypilot.domain.currency.dtos.CurrencyDTO">
+        <include refid="selectCurrencySql"/>
+        ORDER BY COUNTRY ASC
+    </select>
+
+    <select id="selectOneCurrencyByCode" parameterType="java.lang.String"
+            resultType="com.jenna.pennypilot.domain.currency.dtos.CurrencyDTO">
+        <include refid="selectCurrencySql"/>
+        WHERE CODE = UPPER(#{code})
+    </select>
+
+    <insert id="addCurrency" parameterType="com.jenna.pennypilot.domain.currency.dtos.CurrencyDTO">
+        INSERT INTO CURRENCY(CODE, NAME, COUNTRY)
+        VALUES (UPPER(#{code}), #{name}, #{country})
+    </insert>
+
+    <delete id="deleteCurrency" parameterType="com.jenna.pennypilot.domain.currency.dtos.CurrencyDTO">
+        DELETE
+        FROM CURRENCY
+        WHERE CODE = UPPER(#{code})
+          AND NAME = #{name}
+          AND COUNTRY = #{country}
+    </delete>
+
+</mapper>
