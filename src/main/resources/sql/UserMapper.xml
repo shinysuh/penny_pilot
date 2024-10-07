@@ -10,6 +10,7 @@
                EMAIL      AS email,
                FIRST_NAME AS firstName,
                LAST_NAME  AS lastName,
+               CURRENCY   AS currency,
                CREATED_AT AS createdAt,
                UPDATED_AT AS updatedAt
         FROM USERS
@@ -31,8 +32,8 @@
     <insert id="addUser" parameterType="com.jenna.pennypilot.domain.user.dtos.UserDTO" useGeneratedKeys="true"
             keyColumn="id" keyProperty="id">
         /* UserMapper.addUser */
-        INSERT INTO USERS(USERNAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME)
-        VALUES (#{username}, #{email}, #{password}, #{firstName}, #{lastName})
+        INSERT INTO USERS(USERNAME, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, CURRENCY)
+        VALUES (#{username}, #{email}, #{password}, #{firstName}, #{lastName}, UPPER(#{currency}))
     </insert>
 
     <update id="updateUser" parameterType="com.jenna.pennypilot.domain.user.dtos.UserDTO">
@@ -41,6 +42,7 @@
         SET USERNAME   = #{username},
             FIRST_NAME = #{firstName},
             LAST_NAME  = #{lastName},
+            CURRENCY   = UPPER(#{currency}),
             UPDATED_AT = SYSDATE
         WHERE ID = #{id}
     </update>

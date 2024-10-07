@@ -2,6 +2,8 @@ package com.jenna.pennypilot.domain.user.services;
 
 import com.jenna.pennypilot.core.exception.GlobalException;
 import com.jenna.pennypilot.domain.category.services.CategoryService;
+import com.jenna.pennypilot.domain.currency.constants.CurrencyCode;
+import com.jenna.pennypilot.domain.currency.mappers.CurrencyMapper;
 import com.jenna.pennypilot.domain.user.dtos.LoginDTO;
 import com.jenna.pennypilot.domain.user.dtos.UserDTO;
 import com.jenna.pennypilot.domain.user.mappers.UserMapper;
@@ -22,15 +24,15 @@ import static com.jenna.pennypilot.core.exception.ErrorCode.*;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
-
+    private final CurrencyMapper currencyMapper;
     private final CategoryService categoryService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public boolean isLoginInfoMatch(LoginDTO loginDTO) {
         UserDTO loginUser = userMapper.selectUserWithPasswordByEmail(loginDTO.getEmail());
         if (Objects.isNull(loginUser)) {
-            throw new GlobalException(USER_EMAIL_NOT_EXIST);
+            throw new GlobalException(USER_EMAIL_NOT_EXISTS);
         }
 
         this.checkPassword(loginDTO.getPassword(), loginUser.getPassword());
@@ -67,6 +69,7 @@ public class UserServiceImpl implements UserService {
 
             user.setFirstName(user.getFirstName().toLowerCase());
             user.setLastName(user.getLastName().toLowerCase());
+            this.setCurrency(user);
 
             // 사용자 정보 추가
             userMapper.addUser(user);
@@ -91,11 +94,10 @@ public class UserServiceImpl implements UserService {
         }
 
         // username 변경 시, validation
-        String newUsername = user.getUsername();
-        if (!newUsername.equals(oldVersion.getUsername())) {
-            boolean isUsernameTaken = this.checkUsernameAlreadyInUse(newUsername);
-            if (isUsernameTaken) throw new GlobalException(USERNAME_ALREADY_EXISTS);
-        }
+        this.validateNewUsername(user.getUsername(), oldVersion.getUsername());
+
+        // TODO - 변경 시, 이전 내역은 지우지 말고, 같은 날 통화가 바뀌면 UI 차트 분리하는 방향으로
+        this.setCurrency(user);
 
         try {
             userMapper.updateUser(user);
@@ -127,7 +129,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userData = userMapper.selectUserWithPasswordByEmail(user.getEmail());
 
         if (Objects.isNull(userData)) {
-            throw new GlobalException(USER_EMAIL_NOT_EXIST);
+            throw new GlobalException(USER_EMAIL_NOT_EXISTS);
         }
 
         this.checkPassword(user.getPassword(), userData.getPassword());
@@ -162,5 +164,26 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(raw, encoded)) {
             throw new GlobalException(USER_PW_NOT_MATCHED);
         }
+    }
+
+    private void validateNewUsername(String newUsername, String oldUsername) {
+        if (!newUsername.equals(oldUsername)) {
+            boolean isUsernameTaken = this.checkUsernameAlreadyInUse(newUsername);
+            if (isUsernameTaken) throw new GlobalException(USERNAME_ALREADY_EXISTS);
+        }
+    }
+
+    private void setCurrency(UserDTO user) {
+        String currencyCode = user.getCurrency();
+
+        // code가 빈값일 경우 기존 code 세팅
+        if (currencyCode.isEmpty()) currencyCode = user.getCurrency();
+
+        // 통화 정보가 없는 경우, 한국(원)을 기본값으로 설정
+        if (Objects.isNull(currencyMapper.selectOneCurrencyByCode(currencyCode))) {
+            currencyCode = CurrencyCode.KRW.getCode();
+        }
+
+        user.setCurrency(currencyCode);
     }
 }

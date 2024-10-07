@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(userService.addUser(user));
     }
 
-    @Operation(summary = "사용자 정보 업데이트", description = "id 필요 // username / firstName / lastName 변경 가능")
+    @Operation(summary = "사용자 정보 업데이트", description = "id 필요 // username / firstName / lastName / currency 변경 가능")
     @PutMapping("")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO user) {
         userService.updateUser(user);
