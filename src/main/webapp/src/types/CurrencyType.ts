@@ -1,0 +1,17 @@
+export const CurrencyType = {
+  KRW: 'KRW',
+  USD: 'USD',
+  JPY: 'JPY',
+  CAD: 'CAD',
+  AUD: 'AUD',
+  NZD: 'NZD',
+  GBP: 'GBP',
+  EUR: 'EUR',
+  TWD: 'TWD',
+  VND: 'VND',
+  THB: 'THB',
+  TRY: 'TRY',
+  ZWG: 'ZWG',
+  BRL: 'BRL',
+  MXN: 'MXN',
+} as const
