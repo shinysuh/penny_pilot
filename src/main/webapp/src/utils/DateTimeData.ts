@@ -1,4 +1,4 @@
-import { TransactionPeriodType } from '../type/TransactionType.ts'
+import { TransactionPeriodType } from '../types/TransactionType.ts'
 
 export const getCurrentDateByPeriodType = (periodType?: string): string => {
   const date = new Date()
@@ -25,13 +25,13 @@ export const getCurrentDateByPeriodType = (periodType?: string): string => {
  * 지정 월의 날짜 수
  * @param dateStr
  */
-export const getDaysInMonth = (dateStr: string) => {
+export const getDaysInMonth = (dateStr: string): number => {
   const year = parseInt(dateStr.slice(0, 4))
   const month = parseInt(dateStr.slice(5, 7))
   return new Date(year, month, 0).getDate()
 }
 
-export const getDaysAndMonth = (dateStr: string) => {
+export const getDaysAndMonth = (dateStr: string): string[] => {
   const year = parseInt(dateStr.slice(0, 4))
   const month = parseInt(dateStr.slice(5, 7))
   const date = new Date(year, month, 0)
@@ -48,6 +48,19 @@ export const getDaysAndMonth = (dateStr: string) => {
   }
 
   return days
+}
+
+/**
+ * 'YYYY-MM-DD HH:mm:ss' => 오전/오후 hh:mm
+ * @param dateStr
+ */
+export const formatTimeStr = (dateStr: string): string => {
+  const date = new Date(dateStr)
+  return new Intl.DateTimeFormat('ko-KR', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }).format(date)
 }
 
 export const getDateFormatByPeriodType = (periodType: string): string => {
