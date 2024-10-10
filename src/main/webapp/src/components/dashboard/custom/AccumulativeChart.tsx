@@ -6,11 +6,11 @@ import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import { LineChart } from '@mui/x-charts/LineChart'
-import { IMonthlyTransaction } from '../../../interface/TransactionInterface.ts'
+import { IMonthlyTransaction } from '../../../interfaces/TransactionInterface.ts'
 import { LineSeriesType } from '@mui/x-charts/models/seriesType/line'
 import { MakeOptional } from '@mui/x-charts/internals'
 import { StatCardProps } from './TopChartItem.tsx'
-import { getDaysAndMonth } from '../../../util/DateData.ts'
+import { getDaysAndMonth } from '../../../utils/DateTimeData.ts'
 
 type AccumulativeChartProperties = {
   userId: number

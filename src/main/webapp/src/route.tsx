@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import DashboardTemplate from './templates/dashboard/DashboardTemplate.tsx';
-import Dashboard from './component/dashboard/Dashboard.tsx';
+import * as React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import DashboardTemplate from './templates/dashboard/DashboardTemplate.tsx'
+import Dashboard from './components/dashboard/Dashboard.tsx'
 
 type AppRouteProps = {
-  showDashboard: boolean;
-};
+  showDashboard: boolean
+}
 
 const AppRoutes = (props: AppRouteProps) => {
   return (
@@ -22,6 +22,6 @@ const AppRoutes = (props: AppRouteProps) => {
       {/*<Route path="/about" element={<About />} />*/}
       {/*<Route path="/contact" element={<Contact />} />*/}
     </Routes>
-  );
-};
-export default AppRoutes;
+  )
+}
+export default AppRoutes

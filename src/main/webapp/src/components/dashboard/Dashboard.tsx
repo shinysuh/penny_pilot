@@ -13,11 +13,10 @@ import AppNavbar from './components/AppNavbar.tsx'
 import Box from '@mui/material/Box'
 import Header from './components/Header.tsx'
 import Stack from '@mui/material/Stack'
-import MainChartGrid from './custom/MainChartGrid.tsx'
-import {
-  getCurrentDateByPeriodType,
-  getDateFormatByPeriodType,
-} from '../../utils/DateTimeData.ts'
+import MainChartAndGrid from './custom/MainChartAndGrid.tsx'
+import { getCurrentDateByPeriodType } from '../../utils/DateTimeData.ts'
+import { IUser } from '../../interfaces/UserInterface.ts'
+import { useGetUserByIdMutation } from '../../services/UserService.ts'
 
 const themeComponents = {
   ...chartsCustomizations,
@@ -27,13 +26,21 @@ const themeComponents = {
 }
 
 const Dashboard = () => {
-  const [userId, setUserId] = React.useState<number>(3)
+  const [user, setUser] = React.useState<IUser | null>(null)
   const [targetPeriod, setTargetPeriod] = React.useState<string>(
     getCurrentDateByPeriodType(),
   )
 
+  const [getUserById] = useGetUserByIdMutation()
+
   React.useEffect(() => {
-    setUserId(3) // TODO - 동적 적용
+    // TODO - 동적 적용
+    const userId = 3
+    getUserById(userId)
+      .unwrap()
+      .then((userData) => {
+        if (!!userData) setUser(userData)
+      })
   }, [])
 
   return (
@@ -64,7 +71,9 @@ const Dashboard = () => {
               }}
             >
               <Header />
-              <MainChartGrid userId={userId} targetPeriod={targetPeriod} />
+              {user && (
+                <MainChartAndGrid user={user} targetPeriod={targetPeriod} />
+              )}
             </Stack>
           </Box>
         </Box>

@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography'
 import Copyright from '../internals/components/Copyright'
 import ChartUserByCountry from '../components/ChartUserByCountry'
 import CustomizedTreeView from '../components/CustomizedTreeView'
-import CustomizedDataGrid from '../components/CustomizedDataGrid'
 import HighlightedCard from '../components/HighlightedCard'
 import PageViewsBarChart from '../components/PageViewsBarChart'
 import AccumulativeChart from './AccumulativeChart.tsx'
@@ -14,17 +13,20 @@ import {
   IDailyTransaction,
   IMonthlyTransaction,
   IPeriodParam,
-} from '../../../interface/TransactionInterface.ts'
-import { useGetMonthlyTransactionsMutation } from '../../../service/TransactionService.ts'
-import { getDaysInMonth } from '../../../util/DateData.ts'
+} from '../../../interfaces/TransactionInterface.ts'
+import { useGetMonthlyTransactionsMutation } from '../../../services/TransactionService.ts'
+import { getDaysInMonth } from '../../../utils/DateTimeData.ts'
 import TopChartItem, { StatCardProps } from './TopChartItem.tsx'
+import MonthlyTransactionDataGrid from './MonthlyTransactionDataGrid.tsx'
+import { compactNumberFormatter } from '../../../utils/NumberFormatter.ts'
+import { IUser } from '../../../interfaces/UserInterface.ts'
 
-type TopChartsProperties = {
-  userId: number
+type MainChartAndGridProperties = {
+  user: IUser
   targetPeriod: string
 }
 
-const MainChartGrid = (props: TopChartsProperties) => {
+const MainChartAndGrid = (props: MainChartAndGridProperties) => {
   const [displayData, setDisplayData] = React.useState<StatCardProps[]>([])
   const [monthlyTransaction, setMonthlyTransaction] =
     React.useState<IMonthlyTransaction>({
@@ -33,10 +35,6 @@ const MainChartGrid = (props: TopChartsProperties) => {
       totalExpense: 0,
       transactionByDays: [],
     })
-
-  const compactNumberFormatter = new Intl.NumberFormat('ko', {
-    notation: 'compact', // 축약 표기 사용
-  } as Intl.NumberFormatOptions)
 
   const setMonthlyValues = (
     monthlyData: IMonthlyTransaction,
@@ -89,7 +87,7 @@ const MainChartGrid = (props: TopChartsProperties) => {
 
   React.useEffect(() => {
     const params: IPeriodParam = {
-      userId: props.userId,
+      userId: props.user.id,
       transactionPeriod: props.targetPeriod,
     }
 
@@ -126,7 +124,7 @@ const MainChartGrid = (props: TopChartsProperties) => {
         </Grid>
         <Grid size={{ sm: 12, md: 6 }}>
           <AccumulativeChart
-            userId={props.userId}
+            userId={props.user.id}
             targetPeriod={props.targetPeriod}
             monthlyTransaction={monthlyTransaction}
             topChartData={displayData}
@@ -140,19 +138,23 @@ const MainChartGrid = (props: TopChartsProperties) => {
         Details
       </Typography>
       <Grid container spacing={2} columns={12}>
-        <Grid size={{ md: 12, lg: 9 }}>
-          <CustomizedDataGrid />
+        <Grid size={{ md: 12, lg: 12 }}>
+          <MonthlyTransactionDataGrid
+            user={props.user}
+            monthlyTRA={monthlyTransaction}
+          />
+          {/*<CustomizedDataGrid />*/}
         </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <CustomizedTreeView />
-            <ChartUserByCountry />
-          </Stack>
-        </Grid>
+        {/*<Grid size={{ xs: 12, lg: 3 }}>*/}
+        {/*  <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>*/}
+        {/*    <CustomizedTreeView />*/}
+        {/*    <ChartUserByCountry />*/}
+        {/*  </Stack>*/}
+        {/*</Grid>*/}
       </Grid>
       <Copyright sx={{ my: 4 }} />
     </Box>
   )
 }
 
-export default MainChartGrid
+export default MainChartAndGrid
