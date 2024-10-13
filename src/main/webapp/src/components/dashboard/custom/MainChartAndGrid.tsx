@@ -1,13 +1,8 @@
 import * as React from 'react'
 import Grid from '@mui/material/Grid2'
 import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import Copyright from '../internals/components/Copyright'
-import ChartUserByCountry from '../components/ChartUserByCountry'
-import CustomizedTreeView from '../components/CustomizedTreeView'
-import HighlightedCard from '../components/HighlightedCard'
-import PageViewsBarChart from '../components/PageViewsBarChart'
 import AccumulativeChart from './AccumulativeChart.tsx'
 import {
   IDailyTransaction,
@@ -20,6 +15,7 @@ import TopChartItem, { StatCardProps } from './TopChartItem.tsx'
 import MonthlyTransactionDataGrid from './MonthlyTransactionDataGrid.tsx'
 import { compactNumberFormatter } from '../../../utils/NumberFormatter.ts'
 import { IUser } from '../../../interfaces/UserInterface.ts'
+import CategoryPieChart from './CategoryPieChart.tsx'
 
 type MainChartAndGridProperties = {
   user: IUser
@@ -71,13 +67,6 @@ const MainChartAndGrid = (props: MainChartAndGridProperties) => {
         trend: 'down',
         data: expenses,
       },
-      {
-        title: 'Event count',
-        value: compactNumberFormatter.format(traCounts.reduce((a, b) => a + b)),
-        interval: `Last ${dayCount} days`,
-        trend: 'neutral',
-        data: traCounts,
-      },
     ]
 
     setDisplayData([...data])
@@ -114,43 +103,30 @@ const MainChartAndGrid = (props: MainChartAndGridProperties) => {
         columns={12}
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
-        {displayData.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
-            <TopChartItem card={card} targetPeriod={props.targetPeriod} />
-          </Grid>
-        ))}
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <HighlightedCard />
-        </Grid>
-        <Grid size={{ sm: 12, md: 6 }}>
-          <AccumulativeChart
-            userId={props.user.id}
-            targetPeriod={props.targetPeriod}
-            monthlyTransaction={monthlyTransaction}
-            topChartData={displayData}
-          />
-        </Grid>
-        <Grid size={{ sm: 12, md: 6 }}>
-          <PageViewsBarChart />
-        </Grid>
-      </Grid>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Details
-      </Typography>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ md: 12, lg: 12 }}>
+        <Grid size={{ md: 12, lg: 6 }}>
           <MonthlyTransactionDataGrid
             user={props.user}
             monthlyTRA={monthlyTransaction}
           />
-          {/*<CustomizedDataGrid />*/}
         </Grid>
-        {/*<Grid size={{ xs: 12, lg: 3 }}>*/}
-        {/*  <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>*/}
-        {/*    <CustomizedTreeView />*/}
-        {/*    <ChartUserByCountry />*/}
-        {/*  </Stack>*/}
-        {/*</Grid>*/}
+        <Grid container size={{ md: 12, lg: 6 }}>
+          {displayData.map((card, index) => (
+            <Grid key={index} size={{ xs: 12, sm: 6 }}>
+              <TopChartItem card={card} targetPeriod={props.targetPeriod} />
+            </Grid>
+          ))}
+          <Grid size={{ sm: 12, md: 12 }}>
+            <CategoryPieChart />
+          </Grid>
+          <Grid size={{ sm: 12, md: 12 }}>
+            <AccumulativeChart
+              userId={props.user.id}
+              targetPeriod={props.targetPeriod}
+              monthlyTransaction={monthlyTransaction}
+              topChartData={displayData}
+            />
+          </Grid>
+        </Grid>
       </Grid>
       <Copyright sx={{ my: 4 }} />
     </Box>
