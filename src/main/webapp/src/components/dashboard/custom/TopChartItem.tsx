@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography'
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart'
 import { areaElementClasses } from '@mui/x-charts/LineChart'
 import { getDaysAndMonth } from '../../../utils/DateTimeData.ts'
+import { UnitType } from '../../../types/UnitType.ts'
 
 export type StatCardProps = {
   title: string
@@ -16,6 +17,7 @@ export type StatCardProps = {
   interval: string
   trend: 'up' | 'down' | 'neutral'
   data: number[]
+  type?: string
 }
 
 type TopChartItemProperties = {
@@ -78,7 +80,10 @@ const TopChartItem = (props: TopChartItemProperties) => {
               sx={{ justifyContent: 'space-between', alignItems: 'center' }}
             >
               <Typography variant="h4" component="p">
-                {value}
+                {value}{' '}
+                {!!props.card.type && props.card.type === UnitType.EVENT_COUNT
+                  ? '건'
+                  : ''}
               </Typography>
               <Chip size="small" color={color} label={trendValues[trend]} />
             </Stack>
