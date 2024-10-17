@@ -17,6 +17,7 @@ import MainChartAndGrid from './custom/MainChartAndGrid.tsx'
 import { getCurrentDateByPeriodType } from '../../utils/DateTimeData.ts'
 import { IUser } from '../../interfaces/UserInterface.ts'
 import { useGetUserByIdMutation } from '../../services/UserService.ts'
+import { TransactionPeriodType } from '../../types/TransactionType.ts'
 
 const themeComponents = {
   ...chartsCustomizations,
@@ -27,6 +28,9 @@ const themeComponents = {
 
 const Dashboard = () => {
   const [user, setUser] = React.useState<IUser | null>(null)
+  const [periodType, setPeriodType] = React.useState<string>(
+    TransactionPeriodType.MONTH,
+  )
   const [targetPeriod, setTargetPeriod] = React.useState<string>(
     getCurrentDateByPeriodType(),
   )
@@ -72,7 +76,11 @@ const Dashboard = () => {
             >
               <Header />
               {user && (
-                <MainChartAndGrid user={user} targetPeriod={targetPeriod} />
+                <MainChartAndGrid
+                  user={user}
+                  periodType={periodType}
+                  targetPeriod={targetPeriod}
+                />
               )}
             </Stack>
           </Box>

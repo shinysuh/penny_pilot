@@ -19,6 +19,7 @@ import CategoryPieChart from './CategoryPieChart.tsx'
 
 type MainChartAndGridProperties = {
   user: IUser
+  periodType: string
   targetPeriod: string
 }
 
@@ -116,7 +117,10 @@ const MainChartAndGrid = (props: MainChartAndGridProperties) => {
             </Grid>
           ))}
           <Grid size={{ sm: 12, md: 12 }}>
-            <CategoryPieChart />
+            <CategoryPieChart
+              periodType={props.periodType}
+              targetPeriod={props.targetPeriod}
+            />
           </Grid>
           <Grid size={{ sm: 12, md: 12 }}>
             <AccumulativeChart

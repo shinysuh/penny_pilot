@@ -7,8 +7,16 @@ import Stack from '@mui/material/Stack'
 import { styled, useTheme } from '@mui/material/styles'
 import { PieChart } from '@mui/x-charts/PieChart'
 import { useDrawingArea } from '@mui/x-charts/hooks'
+import {
+  TransactionPeriodType,
+  TransactionType,
+} from '../../../types/TransactionType.ts'
+import Grid from '@mui/material/Grid2'
 
-type CategoryPieChartProperties = {}
+type CategoryPieChartProperties = {
+  periodType: string
+  targetPeriod: string
+}
 
 const CategoryPieChart = (props: CategoryPieChartProperties) => {
   const theme = useTheme()
@@ -96,6 +104,52 @@ const CategoryPieChart = (props: CategoryPieChartProperties) => {
     )
   }
 
+  const getPieChartByTransactionType = (type: string): React.JSX.Element => {
+    return (
+      <Grid size={{ md: 6 }}>
+        <PieChart
+          colors={colors}
+          margin={{
+            left: 0,
+            right: 0,
+            top: 40,
+            bottom: 40,
+          }}
+          series={[
+            {
+              data,
+              innerRadius: 60,
+              outerRadius: 90,
+              paddingAngle: 0,
+              highlightScope: { faded: 'global', highlighted: 'item' },
+            },
+          ]}
+          height={260}
+          width={215}
+          slotProps={{
+            legend: { hidden: true },
+          }}
+        >
+          <PieCenterLabel primaryText="98.5K" secondaryText="Total" />
+        </PieChart>
+      </Grid>
+    )
+  }
+
+  const getPeriodToCompare = React.useCallback((): string => {
+    console.log(props.periodType)
+    switch (props.periodType) {
+      case TransactionPeriodType.YEAR:
+        return '전년'
+      case TransactionPeriodType.MONTH:
+        return '전월'
+      case TransactionPeriodType.DAY:
+        return '전일'
+      default:
+        return '전월'
+    }
+  }, [props.periodType])
+
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
@@ -112,39 +166,19 @@ const CategoryPieChart = (props: CategoryPieChartProperties) => {
             }}
           >
             <Typography variant="h4" component="p">
-              1.3M
+              {getPeriodToCompare()} 대비
             </Typography>
+            {/*TODO - 총합 전기간 대비 -빨강 +초록*/}
             <Chip size="small" color="error" label="-8%" />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Page views and downloads for the last 6 months
+            Proportion by Category
           </Typography>
         </Stack>
-        <PieChart
-          colors={colors}
-          margin={{
-            left: 80,
-            right: 80,
-            top: 80,
-            bottom: 80,
-          }}
-          series={[
-            {
-              data,
-              innerRadius: 75,
-              outerRadius: 100,
-              paddingAngle: 0,
-              highlightScope: { faded: 'global', highlighted: 'item' },
-            },
-          ]}
-          height={260}
-          width={260}
-          slotProps={{
-            legend: { hidden: true },
-          }}
-        >
-          <PieCenterLabel primaryText="98.5K" secondaryText="Total" />
-        </PieChart>
+        <Grid container size={{ md: 12 }}>
+          {getPieChartByTransactionType(TransactionType.INCOME)}
+          {getPieChartByTransactionType(TransactionType.EXPENSE)}
+        </Grid>
       </CardContent>
     </Card>
   )
