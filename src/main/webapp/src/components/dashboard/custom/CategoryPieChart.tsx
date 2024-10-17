@@ -14,8 +14,7 @@ import {
 import Grid from '@mui/material/Grid2'
 
 type CategoryPieChartProperties = {
-  periodType: string
-  targetPeriod: string
+  periodParams: IPeriodParam
 }
 
 const CategoryPieChart = (props: CategoryPieChartProperties) => {

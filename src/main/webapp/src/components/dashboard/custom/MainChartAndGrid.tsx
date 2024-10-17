@@ -19,8 +19,7 @@ import CategoryPieChart from './CategoryPieChart.tsx'
 
 type MainChartAndGridProperties = {
   user: IUser
-  periodType: string
-  targetPeriod: string
+  periodParams: IPeriodParam
 }
 
 const MainChartAndGrid = (props: MainChartAndGridProperties) => {
@@ -68,6 +67,14 @@ const MainChartAndGrid = (props: MainChartAndGridProperties) => {
         trend: 'down',
         data: expenses,
       },
+      // {
+      //   title: 'Event count',
+      //   value: compactNumberFormatter.format(traCounts.reduce((a, b) => a + b)),
+      //   interval: `Last ${dayCount} days`,
+      //   trend: 'neutral',
+      //   data: traCounts,
+      //   type: UnitType.EVENT_COUNT,
+      // },
     ]
 
     setDisplayData([...data])
@@ -77,15 +84,17 @@ const MainChartAndGrid = (props: MainChartAndGridProperties) => {
 
   React.useEffect(() => {
     const params: IPeriodParam = {
-      userId: props.user.id,
-      transactionPeriod: props.targetPeriod,
+      userId: props.periodParams.userId,
+      transactionPeriod: props.periodParams.transactionPeriod,
     }
 
     getMonthlyTransactions(params)
       .unwrap()
       .then((monthlyData) => {
         if (!!monthlyData) {
-          const daysInMonth = getDaysInMonth(props.targetPeriod)
+          const daysInMonth = getDaysInMonth(
+            props.periodParams.transactionPeriod,
+          )
           setMonthlyTransaction(monthlyData)
           setMonthlyValues(monthlyData, daysInMonth)
         }
@@ -105,6 +114,9 @@ const MainChartAndGrid = (props: MainChartAndGridProperties) => {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         <Grid size={{ md: 12, lg: 6 }}>
+          {/*<Typography component="h2" variant="h6" sx={{ mb: 2 }}>*/}
+          {/*  Transactions*/}
+          {/*</Typography>*/}
           <MonthlyTransactionDataGrid
             user={props.user}
             monthlyTRA={monthlyTransaction}
@@ -113,25 +125,36 @@ const MainChartAndGrid = (props: MainChartAndGridProperties) => {
         <Grid container size={{ md: 12, lg: 6 }}>
           {displayData.map((card, index) => (
             <Grid key={index} size={{ xs: 12, sm: 6 }}>
-              <TopChartItem card={card} targetPeriod={props.targetPeriod} />
+              <TopChartItem
+                card={card}
+                targetPeriod={props.periodParams.transactionPeriod}
+              />
             </Grid>
           ))}
           <Grid size={{ sm: 12, md: 12 }}>
-            <CategoryPieChart
-              periodType={props.periodType}
-              targetPeriod={props.targetPeriod}
-            />
+            <CategoryPieChart periodParams={props.periodParams} />
           </Grid>
           <Grid size={{ sm: 12, md: 12 }}>
             <AccumulativeChart
               userId={props.user.id}
-              targetPeriod={props.targetPeriod}
+              targetPeriod={props.periodParams.transactionPeriod}
               monthlyTransaction={monthlyTransaction}
               topChartData={displayData}
             />
           </Grid>
         </Grid>
       </Grid>
+      {/*<Typography component="h2" variant="h6" sx={{ mb: 2 }}>*/}
+      {/*  Transactions*/}
+      {/*</Typography>*/}
+      {/*<Grid container spacing={2} columns={12}>*/}
+      {/*  <Grid size={{ md: 12, lg: 12 }}>*/}
+      {/*    <MonthlyTransactionDataGrid*/}
+      {/*      user={props.user}*/}
+      {/*      monthlyTRA={monthlyTransaction}*/}
+      {/*    />*/}
+      {/*  </Grid>*/}
+      {/*</Grid>*/}
       <Copyright sx={{ my: 4 }} />
     </Box>
   )

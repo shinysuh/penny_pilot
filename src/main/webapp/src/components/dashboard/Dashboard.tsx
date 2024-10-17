@@ -78,8 +78,11 @@ const Dashboard = () => {
               {user && (
                 <MainChartAndGrid
                   user={user}
-                  periodType={periodType}
-                  targetPeriod={targetPeriod}
+                  periodParams={{
+                    userId: user.id,
+                    transactionPeriod: targetPeriod,
+                    periodType: periodType,
+                  }}
                 />
               )}
             </Stack>
