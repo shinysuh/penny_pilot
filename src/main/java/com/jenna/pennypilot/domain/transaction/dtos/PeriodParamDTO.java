@@ -10,7 +10,7 @@ public class PeriodParamDTO {
 
     private String transactionPeriod;       // 연 / 월 / 일 기준
 
-    private PeriodType periodType;      // year / month / day
+    private String periodType;      // year / month / day
 
     private String periodFormat;        // YYYY / YYYY-MM / YYYY-MM-DD
 }

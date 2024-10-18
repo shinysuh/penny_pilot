@@ -38,7 +38,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public MonthlyTransactionDTO getMonthlyTransactions(PeriodParamDTO params) {
         // 날짜 형식 validation
-        params.setPeriodType(PeriodType.MONTH);
+        params.setPeriodType(PeriodType.MONTH.getName());
         this.validateDateFormat(params);
 
         // 날짜 / 총수입 / 총지출 정보 list
@@ -142,7 +142,7 @@ public class TransactionServiceImpl implements TransactionService {
         String datePattern = "";
         String periodFormat = "";
 
-        PeriodType periodType = params.getPeriodType();
+        PeriodType periodType = PeriodType.valueOf(params.getPeriodType().toUpperCase());
 
         switch (periodType) {
             case YEAR -> {
@@ -187,9 +187,9 @@ public class TransactionServiceImpl implements TransactionService {
      */
     private void setPeriodType(PeriodParamDTO params, String periodType) {
         params.setPeriodType(
-                periodType.toLowerCase().equals(PeriodType.YEAR.getName()) ? PeriodType.YEAR
-                        : periodType.equals(PeriodType.DAY.getName()) ? PeriodType.DAY
-                        : PeriodType.MONTH
+                periodType.toLowerCase().equals(PeriodType.YEAR.getName()) ? PeriodType.YEAR.getName()
+                        : periodType.equals(PeriodType.DAY.getName()) ? PeriodType.DAY.getName()
+                        : PeriodType.MONTH.getName()
         );
     }
 }
