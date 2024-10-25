@@ -79,7 +79,7 @@ const TopChartItem = (props: TopChartItemProperties) => {
               direction="row"
               sx={{ justifyContent: 'space-between', alignItems: 'center' }}
             >
-              <Typography variant="h4" component="p">
+              <Typography variant="h5" component="p">
                 {value}{' '}
                 {!!props.card.type && props.card.type === UnitType.EVENT_COUNT
                   ? '건'

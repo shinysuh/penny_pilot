@@ -91,7 +91,7 @@ const AccumulativeChart = (props: AccumulativeChartProperties) => {
               gap: 1,
             }}
           >
-            <Typography variant="h4" component="p">
+            <Typography variant="h5" component="p">
               13,277
             </Typography>
             <Chip size="small" color="success" label="+35%" />
@@ -111,7 +111,7 @@ const AccumulativeChart = (props: AccumulativeChartProperties) => {
               },
             ]}
             series={series}
-            height={250}
+            height={200}
             margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
             grid={{ horizontal: true }}
             sx={{

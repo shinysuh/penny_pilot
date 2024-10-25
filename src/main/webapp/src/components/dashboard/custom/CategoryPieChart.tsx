@@ -166,7 +166,7 @@ const CategoryPieChart = (props: CategoryPieChartProperties) => {
                 highlightScope: { faded: 'global', highlighted: 'item' },
               },
             ]}
-            height={260}
+            height={200}
             width={215}
             slotProps={{
               legend: { hidden: true },
@@ -211,7 +211,7 @@ const CategoryPieChart = (props: CategoryPieChartProperties) => {
               gap: 1,
             }}
           >
-            <Typography variant="h4" component="p">
+            <Typography variant="h5" component="p">
               {getPeriodToCompare()} 대비
             </Typography>
             {/*TODO - 총합 전기간 대비 -빨강 +초록*/}

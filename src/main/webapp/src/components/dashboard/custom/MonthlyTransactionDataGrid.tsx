@@ -114,7 +114,7 @@ const MonthlyTransactionDataGrid = (
   return (
     <DataGrid
       autoHeight
-      checkboxSelection
+      // checkboxSelection
       rows={transactions}
       columns={columns}
       getRowClassName={(params) =>
@@ -123,7 +123,7 @@ const MonthlyTransactionDataGrid = (
       initialState={{
         pagination: { paginationModel: { pageSize: 20 } },
       }}
-      pageSizeOptions={[10, 20, 50]}
+      // pageSizeOptions={[10, 20, 24]}
       disableColumnResize
       density="compact"
       slotProps={{
