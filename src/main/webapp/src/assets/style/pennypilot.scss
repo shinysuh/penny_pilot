@@ -1,3 +1,21 @@
 .test-button {
   margin-bottom: 20px;
 }
+
+.transaction-detail {
+  //white-space: normal;
+  line-height: 1.2rem;
+
+  .transaction-description {
+    text-overflow: ellipsis;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1px;
+  }
+
+  .transaction-time {
+    font-size: 11px;
+    margin-right: 8px;
+  }
+}
+

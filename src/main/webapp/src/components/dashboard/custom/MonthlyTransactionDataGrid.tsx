@@ -44,35 +44,8 @@ const MonthlyTransactionDataGrid = (
       flex: 3,
       minWidth: 160,
       hideSortIcons: true,
-      // renderCell: (params) => renderStatus(params.value as any),   // TODO => 금액 색깔 만들 때 쓰기
-    },
-    {
-      field: 'transactionDate',
-      headerName: '시각',
-      headerAlign: 'center',
-      align: 'center',
-      flex: 1,
-      minWidth: 100,
-      hideSortIcons: true,
-      valueFormatter: (value) => formatTimeStr(value),
-    },
-    {
-      field: 'bankName',
-      headerName: '은행',
-      headerAlign: 'center',
-      align: 'center',
-      flex: 1,
-      minWidth: 100,
-      hideSortIcons: true,
-    },
-    {
-      field: 'accountName',
-      headerName: '자산',
-      headerAlign: 'center',
-      align: 'center',
-      flex: 1,
-      minWidth: 100,
-      hideSortIcons: true,
+      renderCell: (params) =>
+        renderDescriptionCell(params.value, params.row as ITransactionResult),
     },
     {
       field: 'amount',
@@ -102,6 +75,23 @@ const MonthlyTransactionDataGrid = (
     )
   }
 
+  const renderDescriptionCell = (
+    description: string,
+    transaction: ITransactionResult,
+  ) => {
+    return (
+      <div className={'transaction-detail'}>
+        <div className={'transaction-description'}>{description}</div>
+        <span className={'transaction-time'}>
+          {formatTimeStr(transaction.transactionDate)}
+        </span>
+        <span className={'transaction-time'} style={{ color: 'success' }}>
+          {transaction.accountName}
+        </span>
+      </div>
+    )
+  }
+
   function renderStatus(status: 'Online' | 'Offline') {
     const colors: { [index: string]: 'success' | 'default' } = {
       Online: 'success',
@@ -117,6 +107,7 @@ const MonthlyTransactionDataGrid = (
       // checkboxSelection
       rows={transactions}
       columns={columns}
+      rowHeight={60}
       getRowClassName={(params) =>
         params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
       }
