@@ -3,14 +3,13 @@
 }
 
 .transaction-detail {
-  //white-space: normal;
   line-height: 1.2rem;
 
   .transaction-description {
-    text-overflow: ellipsis;
-    display: flex;
-    flex-direction: column;
     margin-top: 1px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .transaction-time {
