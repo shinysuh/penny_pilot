@@ -111,7 +111,7 @@ const AccumulativeChart = (props: AccumulativeChartProperties) => {
               },
             ]}
             series={series}
-            height={200}
+            height={250}
             margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
             grid={{ horizontal: true }}
             sx={{

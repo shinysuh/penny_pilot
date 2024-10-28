@@ -166,7 +166,7 @@ const CategoryPieChart = (props: CategoryPieChartProperties) => {
                 highlightScope: { faded: 'global', highlighted: 'item' },
               },
             ]}
-            height={200}
+            height={265}
             width={215}
             slotProps={{
               legend: { hidden: true },
