@@ -51,16 +51,31 @@ export const getDaysAndMonth = (dateStr: string): string[] => {
 }
 
 /**
- * 'YYYY-MM-DD HH:mm:ss' => 오전/오후 hh:mm
+ * 'YYYY-MM-DD HH:mm:ss' => [00일] 오전/오후 hh:mm
  * @param dateStr
+ * @param isTimeOnly
  */
-export const formatTimeStr = (dateStr: string): string => {
+export const formatTimeStr = (
+  dateStr: string,
+  isTimeOnly?: boolean,
+): string => {
   const date = new Date(dateStr)
-  return new Intl.DateTimeFormat('ko-KR', {
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-  }).format(date)
+
+  const options: any = isTimeOnly
+    ? {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      }
+    : {
+        // month: 'narrow',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      }
+
+  return new Intl.DateTimeFormat('ko-KR', options).format(date)
 }
 
 export const getDateFormatByPeriodType = (periodType: string): string => {
