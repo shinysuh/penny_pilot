@@ -37,6 +37,13 @@ dependencies {
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Mockito Core
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    // Mockito Inline (if you need mocking final classes and methods)
+    testImplementation 'org.mockito:mockito-inline:5.5.0'
+    // Optional: Mockito JUnit integration
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
 }
 
 tasks.named('test') {
