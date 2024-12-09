@@ -162,12 +162,19 @@ public class TransactionServiceImpl implements TransactionService {
             }
         }
 
+        this.setPeriodParams(params, subStrEnd, periodFormat, datePattern);
+    }
+
+    private void setPeriodParams(PeriodParamDTO params, int subStrEnd, String periodFormat, String datePattern) {
         String targetPeriod = params.getTransactionPeriod().substring(0, subStrEnd);
         params.setTransactionPeriod(targetPeriod);
         params.setPeriodFormat(periodFormat);
 
-        Matcher matcher = Pattern.compile(datePattern).matcher(targetPeriod);
+        this.validateTransactionDate(datePattern, targetPeriod);
+    }
 
+    private void validateTransactionDate(String datePattern, String targetPeriod) {
+        Matcher matcher = Pattern.compile(datePattern).matcher(targetPeriod);
         if (!matcher.matches()) throw new GlobalException(INVALID_TRANSACTION_DATE);
     }
 
