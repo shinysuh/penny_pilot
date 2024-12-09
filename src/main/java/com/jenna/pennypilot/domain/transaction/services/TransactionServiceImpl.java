@@ -138,39 +138,23 @@ public class TransactionServiceImpl implements TransactionService {
      * 거래 날짜 validation
      */
     private void validateDateFormat(PeriodParamDTO params) {
-        int subStrEnd = 0;
-        String datePattern = "";
-        String periodFormat = "";
+        PeriodType periodType;
 
-        PeriodType periodType = PeriodType.valueOf(params.getPeriodType().toUpperCase());
-
-        switch (periodType) {
-            case YEAR -> {
-                subStrEnd = 4;
-                datePattern = "^\\d{4}$";
-                periodFormat = "YYYY";
-            }
-            case MONTH -> {
-                subStrEnd = 7;
-                datePattern = "^\\d{4}-(0[1-9]|1[0-2])$";
-                periodFormat = "YYYY-MM";
-            }
-            case DAY -> {
-                subStrEnd = 10;
-                datePattern = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$";
-                periodFormat = "YYYY-MM-DD";
-            }
+        switch (params.getPeriodType().toLowerCase()) {
+            case "year" -> periodType = PeriodType.YEAR;
+            case "day" -> periodType = PeriodType.DAY;
+            default -> periodType = PeriodType.MONTH;
         }
 
-        this.setPeriodParams(params, subStrEnd, periodFormat, datePattern);
+        this.setPeriodParams(params, periodType);
     }
 
-    private void setPeriodParams(PeriodParamDTO params, int subStrEnd, String periodFormat, String datePattern) {
-        String targetPeriod = params.getTransactionPeriod().substring(0, subStrEnd);
+    private void setPeriodParams(PeriodParamDTO params, PeriodType periodType) {
+        String targetPeriod = params.getTransactionPeriod().substring(0, periodType.getSubStrEnd());
         params.setTransactionPeriod(targetPeriod);
-        params.setPeriodFormat(periodFormat);
+        params.setPeriodFormat(periodType.getPeriodFormat());
 
-        this.validateTransactionDate(datePattern, targetPeriod);
+        this.validateTransactionDate(periodType.getDatePattern(), targetPeriod);
     }
 
     private void validateTransactionDate(String datePattern, String targetPeriod) {
