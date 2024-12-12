@@ -76,38 +76,46 @@ public class TransactionServiceImpl implements TransactionService {
         // 날짜 형식 validation
         this.setPeriodType(params, periodType);
         this.validateDateFormat(params);
+        return TotalByPeriodDTO.builder()
+                .transactionPeriod(params.getTransactionPeriod())
+                .transactions(this.getTotalByTypes(params))
+                .build();
+    }
 
+    private List<TotalByTypeDTO> getTotalByTypes(PeriodParamDTO params) {
+        List<TotalByTypeDTO> totalByTypes = new ArrayList<>();
         List<TotalByCtgDTO> ctgTotals = transactionMapper.selectCtgTotalsByPeriod(params);
+        for (String type : this.getTypes()) {
+            totalByTypes.add(this.getTotalByType(ctgTotals, type));
+        }
+        return totalByTypes;
+    }
 
+    private TotalByTypeDTO getTotalByType(List<TotalByCtgDTO> ctgTotals, String type) {
+        List<TotalByCtgDTO> ctgTotalByTypes = this.getCtgTotalByTypes(ctgTotals, type);
+        return TotalByTypeDTO.builder()
+                .transactionType(type)
+                .totalAmount(this.getTotalAmountByType(ctgTotalByTypes))
+                .ctgTotals(ctgTotalByTypes)
+                .build();
+    }
+
+    private List<TotalByCtgDTO> getCtgTotalByTypes(List<TotalByCtgDTO> ctgTotals, String type) {
+        return ctgTotals.stream()
+                .filter(ctgTotal -> type.equalsIgnoreCase(ctgTotal.getTransactionType()))
+                .toList();
+    }
+
+    private long getTotalAmountByType(List<TotalByCtgDTO> ctgTotalByTypes) {
+        return ctgTotalByTypes.stream().mapToLong(TotalByCtgDTO::getTotalAmount).sum();
+    }
+
+    private String[] getTypes() {
         // 수입, 지출
-        String[] types = {
+        return new String[]{
                 TransactionType.INCOME.getType(),
                 TransactionType.EXPENSE.getType(),
         };
-
-        List<TotalByTypeDTO> totalByTypes = new ArrayList<>();
-        long total;
-
-        for (String type : types) {
-            // 타입별 카테고리 total 내역
-            List<TotalByCtgDTO> ctgTotalByTypes = ctgTotals.stream()
-                    .filter(ctgTotal -> type.equalsIgnoreCase(ctgTotal.getTransactionType()))
-                    .toList();
-
-            // 타입별 total 집계
-            total = ctgTotalByTypes.stream().mapToLong(TotalByCtgDTO::getTotalAmount).sum();
-
-            totalByTypes.add(TotalByTypeDTO.builder()
-                    .transactionType(type)
-                    .totalAmount(total)
-                    .ctgTotals(ctgTotalByTypes)
-                    .build());
-        }
-
-        return TotalByPeriodDTO.builder()
-                .transactionPeriod(params.getTransactionPeriod())
-                .transactions(totalByTypes)
-                .build();
     }
 
     @Override
