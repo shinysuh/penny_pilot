@@ -15,9 +15,7 @@ import com.jenna.pennypilot.domain.transaction.mappers.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,32 +41,47 @@ public class TransactionServiceImpl implements TransactionService {
 
         // 날짜 / 총수입 / 총지출 정보 list
         List<DailyTransactionDTO> dailyTotals = transactionMapper.selectDailyTotalsByMonth(params);
-        // 해당 월의 전체 transaction list
-        List<TransactionResultDTO> transactions = transactionMapper.selectAllTransactionsByMonth(params);
-
-        long monthlyTotalIncome = 0L;
-        long monthlyTotalExpense = 0L;
-
-        for (DailyTransactionDTO daily : dailyTotals) {
-            String day = daily.getDay();
-
-            monthlyTotalIncome += daily.getTotalIncome();
-            monthlyTotalExpense += daily.getTotalExpense();
-
-            // day 날짜에 해당하는 transactions 필터링
-            List<TransactionResultDTO> trs = transactions.stream()
-                    .filter(tr -> tr.getTransactionDate().contains(day))
-                    .toList();
-
-            daily.setTransactions(trs);
-        }
+        Map<String, Long> monthlyTotals = this.getDailyTransactions(params, dailyTotals);
 
         return MonthlyTransactionDTO.builder()
                 .transactionMonth(params.getTransactionPeriod())
-                .totalIncome(monthlyTotalIncome)
-                .totalExpense(monthlyTotalExpense)
+                .totalIncome(monthlyTotals.get(TransactionType.INCOME.getType()))
+                .totalExpense(monthlyTotals.get(TransactionType.EXPENSE.getType()))
                 .transactionByDays(dailyTotals)
                 .build();
+    }
+
+    private Map<String, Long> getMonthlyTotals() {
+        Map<String, Long> monthlyTotal = new HashMap<>();
+        monthlyTotal.put(TransactionType.INCOME.getType(), 0L);
+        monthlyTotal.put(TransactionType.EXPENSE.getType(), 0L);
+        return monthlyTotal;
+    }
+
+    private void updateMonthlyTotals(Map<String, Long> monthlyTotal, String target, long value) {
+        monthlyTotal.put(target, monthlyTotal.get(target) + value);
+    }
+
+    private Map<String, Long> getDailyTransactions(PeriodParamDTO params, List<DailyTransactionDTO> dailyTotals) {
+        Map<String, Long> monthlyTotals = this.getMonthlyTotals();
+        // 해당 월의 전체 transaction list
+        List<TransactionResultDTO> transactions = transactionMapper.selectAllTransactionsByMonth(params);
+
+        for (DailyTransactionDTO daily : dailyTotals) {
+            this.setTransactionByDay(monthlyTotals, transactions, daily);
+        }
+        return monthlyTotals;
+    }
+
+    private void setTransactionByDay(Map<String, Long> monthlyTotals, List<TransactionResultDTO> transactions, DailyTransactionDTO daily) {
+        this.updateMonthlyTotals(monthlyTotals, TransactionType.INCOME.getType(), daily.getTotalIncome());
+        this.updateMonthlyTotals(monthlyTotals, TransactionType.EXPENSE.getType(), daily.getTotalExpense());
+
+        // day 날짜에 해당하는 transactions 필터링
+        List<TransactionResultDTO> trs = transactions.stream()
+                .filter(tr -> tr.getTransactionDate().contains(daily.getDay()))
+                .toList();
+        daily.setTransactions(trs);
     }
 
     @Override
