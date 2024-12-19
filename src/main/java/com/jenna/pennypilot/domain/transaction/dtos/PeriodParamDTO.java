@@ -1,9 +1,14 @@
 package com.jenna.pennypilot.domain.transaction.dtos;
 
-import com.jenna.pennypilot.domain.transaction.constants.PeriodType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PeriodParamDTO {
 
     private int userId;
