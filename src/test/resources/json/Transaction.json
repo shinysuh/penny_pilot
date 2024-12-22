@@ -1628,5 +1628,248 @@
       "createdAt": "2024-10-28 08:07:47",
       "updatedAt": "2024-10-28 08:07:47"
     }
+  ],
+  "dailyTransactions": [
+    {
+      "day": "2024-11-30",
+      "totalIncome": 178200,
+      "totalExpense": 0,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-29",
+      "totalIncome": 175000,
+      "totalExpense": 0,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-28",
+      "totalIncome": 167200,
+      "totalExpense": 0,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-27",
+      "totalIncome": 337300,
+      "totalExpense": 0,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-26",
+      "totalIncome": 170100,
+      "totalExpense": 0,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-25",
+      "totalIncome": 162300,
+      "totalExpense": 0,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-24",
+      "totalIncome": 159100,
+      "totalExpense": 0,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-23",
+      "totalIncome": 100000,
+      "totalExpense": 89000,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-22",
+      "totalIncome": 96800,
+      "totalExpense": 85800,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-21",
+      "totalIncome": 89000,
+      "totalExpense": 78000,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-20",
+      "totalIncome": 85800,
+      "totalExpense": 74800,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-16",
+      "totalIncome": 98200,
+      "totalExpense": 87200,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-15",
+      "totalIncome": 132000,
+      "totalExpense": 188000,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-14",
+      "totalIncome": 121000,
+      "totalExpense": 170600,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-13",
+      "totalIncome": 203300,
+      "totalExpense": 227300,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-12",
+      "totalIncome": 112900,
+      "totalExpense": 144700,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-11",
+      "totalIncome": 82300,
+      "totalExpense": 71300,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-10",
+      "totalIncome": 79100,
+      "totalExpense": 68100,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-08",
+      "totalIncome": 35200,
+      "totalExpense": 98600,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-07",
+      "totalIncome": 32000,
+      "totalExpense": 89000,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-06",
+      "totalIncome": 204200,
+      "totalExpense": 64200,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-05",
+      "totalIncome": 228100,
+      "totalExpense": 144900,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-04",
+      "totalIncome": 196100,
+      "totalExpense": 74300,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-03",
+      "totalIncome": 185100,
+      "totalExpense": 59300,
+      "transactions": []
+    },
+    {
+      "day": "2024-11-02",
+      "totalIncome": 16100,
+      "totalExpense": 56100,
+      "transactions": []
+    }
+  ],
+  "typeTotals": [
+    {
+      "transactionType": "income",
+      "totalAmount": 3446400,
+      "ctgTotals": []
+    },
+    {
+      "transactionType": "expense",
+      "totalAmount": 1871200,
+      "ctgTotals": []
+    }
+  ],
+  "totalByPeriod": {
+    "transactionPeriod": "2024-11",
+    "transactions": [
+      {
+        "transactionType": "income",
+        "totalAmount": 3446400,
+        "ctgTotals": [
+          {
+            "transactionType": "income",
+            "ctgId": 3,
+            "ctgNm": "생활용품",
+            "totalAmount": 2140800
+          },
+          {
+            "transactionType": "income",
+            "ctgId": 2,
+            "ctgNm": "패션",
+            "totalAmount": 980800
+          },
+          {
+            "transactionType": "income",
+            "ctgId": 1,
+            "ctgNm": "식비",
+            "totalAmount": 324800
+          }
+        ]
+      },
+      {
+        "transactionType": "expense",
+        "totalAmount": 1871200,
+        "ctgTotals": [
+          {
+            "transactionType": "expense",
+            "ctgId": 2,
+            "ctgNm": "패션",
+            "totalAmount": 1753600
+          },
+          {
+            "transactionType": "expense",
+            "ctgId": 1,
+            "ctgNm": "식비",
+            "totalAmount": 117600
+          }
+        ]
+      }
+    ]
+  },
+  "ctgTotals": [
+    {
+      "transactionType": "income",
+      "ctgId": 3,
+      "ctgNm": "생활용품",
+      "totalAmount": 2140800
+    },
+    {
+      "transactionType": "expense",
+      "ctgId": 2,
+      "ctgNm": "패션",
+      "totalAmount": 1753600
+    },
+    {
+      "transactionType": "income",
+      "ctgId": 2,
+      "ctgNm": "패션",
+      "totalAmount": 980800
+    },
+    {
+      "transactionType": "income",
+      "ctgId": 1,
+      "ctgNm": "식비",
+      "totalAmount": 324800
+    },
+    {
+      "transactionType": "expense",
+      "ctgId": 1,
+      "ctgNm": "식비",
+      "totalAmount": 117600
+    }
   ]
 }
