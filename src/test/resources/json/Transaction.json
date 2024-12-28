@@ -1785,12 +1785,44 @@
     {
       "transactionType": "income",
       "totalAmount": 3446400,
-      "ctgTotals": []
+      "ctgTotals": [
+        {
+          "transactionType": "income",
+          "ctgId": 3,
+          "ctgNm": "생활용품",
+          "totalAmount": 2140800
+        },
+        {
+          "transactionType": "income",
+          "ctgId": 2,
+          "ctgNm": "패션",
+          "totalAmount": 980800
+        },
+        {
+          "transactionType": "income",
+          "ctgId": 1,
+          "ctgNm": "식비",
+          "totalAmount": 324800
+        }
+      ]
     },
     {
       "transactionType": "expense",
       "totalAmount": 1871200,
-      "ctgTotals": []
+      "ctgTotals": [
+        {
+          "transactionType": "expense",
+          "ctgId": 2,
+          "ctgNm": "패션",
+          "totalAmount": 1753600
+        },
+        {
+          "transactionType": "expense",
+          "ctgId": 1,
+          "ctgNm": "식비",
+          "totalAmount": 117600
+        }
+      ]
     }
   ],
   "totalByPeriod": {
