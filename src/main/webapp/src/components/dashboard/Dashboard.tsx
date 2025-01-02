@@ -9,7 +9,7 @@ import {
   treeViewCustomizations,
 } from './templateTheme/customizations'
 import SideMenu from './components/SideMenu.tsx'
-import AppNavbar from './components/AppNavbar.tsx'
+import AppNavbar from './custom/AppNavbar.tsx'
 import Box from '@mui/material/Box'
 import Header from './components/Header.tsx'
 import Stack from '@mui/material/Stack'
